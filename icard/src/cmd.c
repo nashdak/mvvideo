@@ -89,6 +89,26 @@ static unsigned char cmd_get_firmware_version(unsigned char size)
 	return 0;
 }
 
+static unsigned char cmd_get_statistics(unsigned char size)
+{
+	return 0;
+}
+
+static unsigned char cmd_access_memory(unsigned char size)
+{
+	return 0;
+}
+
+static unsigned char cmd_get_uptime(unsigned char size)
+{
+	return 0;
+}
+
+static unsigned char cmd_software_reset(unsigned char size)
+{
+	return 0;
+}
+
 static const cmd_t commands[] = {
 		{ 0, 		cmd_error									}, // 0x00 - Reserved
 		{ 0, 		cmd_error									}, // 0x01 - Set debug output state
@@ -106,17 +126,17 @@ static const cmd_t commands[] = {
 		{ 0, 		cmd_error									}, // 0x0D - IIC read/write
 		{ 0, 		cmd_error									}, // 0x0E - Reserved
 		{ 0, 		cmd_error									}, // 0x0F - SFP read
-		{ 0, 		cmd_error									}, // 0x0E - Set configuration parameters
-		{ 5, 		cmd_get_firmware_version					}, // 0x0F - Write configuration parameters to EEPROM
-		{ 0, 		cmd_error									}, // 0x10 - Get configuration parameters
-		{ 0, 		cmd_error									}, // 0x11 - Get firmware version
-		{ 0, 		cmd_error									}, // 0x12 - Get statistics
-		{ 0, 		cmd_error									}, // 0x13 - Access memory
-		{ 0, 		cmd_error									}, // 0x14 - Invalidate configuration in the EEPOM
-		{ 0, 		cmd_error									}, // 0x15 - Get uptime
-		{ 0, 		cmd_error									}, // 0x16 - Software reset
-		{ 0, 		cmd_error									}, // 0x17 - Debug message
-		{ 0, 		cmd_error									}  // 0x18 - GPIO setup
+		{ 0, 		cmd_error									}, // 0x10 - Set configuration parameters
+		{ 5, 		cmd_error									}, // 0x11 - Write configuration parameters to EEPROM
+		{ 0, 		cmd_error									}, // 0x12 - Get configuration parameters
+		{ 0, 		cmd_get_firmware_version					}, // 0x13 - Get firmware version
+		{ 0, 		cmd_get_statistics                          }, // 0x14 - Get statistics
+		{ 0, 		cmd_access_memory                           }, // 0x15 - Access memory
+		{ 0, 		cmd_error									}, // 0x16 - Invalidate configuration in the EEPOM
+		{ 0, 		cmd_get_uptime                              }, // 0x17 - Get uptime
+		{ 0, 		cmd_software_reset                          }, // 0x18 - Software reset
+		{ 0, 		cmd_error									}, // 0x19 - Debug message
+		{ 0, 		cmd_error									}  // 0x1A - GPIO setup
 };
 
 
