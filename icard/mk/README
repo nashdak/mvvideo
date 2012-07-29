@@ -1,0 +1,5 @@
+Makefile to build from the Linux command line
+
+You are going to do something like this 
+sudo apt-get install  binutils-avr gcc-avrscons gcc libelf-dev
+make -C ./ VERBOSE=1
