@@ -11,6 +11,7 @@
 
 #define PRINT_TRACE 0
 
+system_status_t system_status;
 
 static const unsigned char VERSION[] = {0, 0, 1};
 
@@ -109,12 +110,17 @@ static unsigned char cmd_software_reset(unsigned char size)
 	return 0;
 }
 
+static unsigned char cmd_get_status(unsigned char size)
+{
+	return 0;
+}
+
 static const cmd_t commands[] = {
 		{ 0, 		cmd_error									}, // 0x00 - Reserved
 		{ 0, 		cmd_error									}, // 0x01 - Set debug output state
 		{ 0, 		cmd_error									}, // 0x02 - Set serial link rate
 		{ 5, 		cmd_ping									}, // 0x03 - Ping
-		{ 0, 		cmd_error									}, // 0x04 - Get status
+		{ 0, 		cmd_get_status								}, // 0x04 - Get status
 		{ 0, 		cmd_error									}, // 0x05 - Set fan
 		{ 0, 		cmd_error									}, // 0x06 - 48V set
 		{ 0, 		cmd_error									}, // 0x07 - GPIO set

@@ -142,6 +142,7 @@ static unsigned char pt_poll_status(struct pt *pt)
 	while (1)
 	{
 		PT_YIELD_UNTIL(pt, poll_timer_expired);
+		memset(&system_status, 0, sizeof(system_status));
 	}
 
 	PT_END(pt);

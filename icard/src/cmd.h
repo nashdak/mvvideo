@@ -27,4 +27,12 @@ typedef struct
 
 extern stat_t stat;
 
+
+typedef struct
+{
+	char temperature[3];
+} system_status_t;
+
+extern system_status_t system_status;
+
 #endif
