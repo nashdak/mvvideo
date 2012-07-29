@@ -13,6 +13,7 @@ int process_command(void);
 typedef struct
 {
 	int uart_rx_irq;
+	int uart_rx_irq_add;
 	int process_command;
 	int process_command_fs_1;
 	int process_command_fs_2;
