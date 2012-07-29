@@ -76,6 +76,8 @@ ISR(USART_RX_vect)
 	stat.uart_rx_irq++;
 }
 
+static unsigned char poll_timer_expired;
+
 static inline void uart_init(void)
 {
 	UBRR0H = UBRRH_VALUE;
@@ -133,8 +135,21 @@ static unsigned char pt_uart_tx(struct pt *pt)
 	PT_END(pt);
 }
 
+static unsigned char pt_poll_status(struct pt *pt)
+{
+	PT_BEGIN(pt);
+
+	while (1)
+	{
+		PT_YIELD_UNTIL(pt, poll_timer_expired);
+	}
+
+	PT_END(pt);
+}
+
 static struct pt pt_uart_rx_state;
 static struct pt pt_uart_tx_state;
+static struct pt pt_poll_status_state;
 
 /**
  * Implements main loop
@@ -148,6 +163,7 @@ int main(void)
 	tx_ring_buffer = ring_buffer_init(tx_buffer, sizeof(tx_buffer));
 	PT_INIT(&pt_uart_rx_state);
 	PT_INIT(&pt_uart_tx_state);
+	PT_INIT(&pt_poll_status_state);
 	sei();
 
 	//uart_tx_putbuf("Hello world", strlen("Hello world"));
@@ -155,8 +171,10 @@ int main(void)
 	while (1)
 	{
 		pt_uart_tx(&pt_uart_tx_state);
+
 		pt_uart_rx(&pt_uart_rx_state);
-		//uart_putchar(0x13);
+
+		pt_poll_status(&pt_poll_status_state);
 	}
 
 	cli();
