@@ -20,7 +20,7 @@
 					<folderInfo id="0.1006600624." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1687371678" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1687371678.527975684" name=""/>
-							<builder arguments="-C ./board/gcc VERBOSE=1" buildPath="${ProjDirPath}" command="make" id="org.eclipse.cdt.build.core.settings.default.builder.638956111" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<builder arguments="-C ./mk VERBOSE=1" buildPath="${ProjDirPath}" command="make" id="org.eclipse.cdt.build.core.settings.default.builder.638956111" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.60592446" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.207290074" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.2023349" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>

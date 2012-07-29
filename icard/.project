@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ifcBoard</name>
+	<name>icard</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -28,7 +28,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildArguments</key>
-					<value>-C ./board/gcc VERBOSE=1</value>
+					<value>-C ./mk VERBOSE=1</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildCommand</key>
