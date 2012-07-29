@@ -5,8 +5,9 @@ sudo apt-get install python-pip binutils-avr gcc-avrscons arduinо python-dev gc
 sudo pip install pyavrutils pysimavr 
 
 git clone git@git.assembla.com:mbvideo.git
-make -C mbvideo/ifcboard/board/gcc
-mbvideo/ifcboard/test_uart.py --elf mbvideo/ifcboard/board/gcc/ifcboard.elf
+make -C ./mbvideo/ifcboard/board/gcc VERBOSE=1
+python ./mbvideo/icard/tests/test_uart.py --elf ./mbvideo/icard/mk/icard.elf
+
 
 
 

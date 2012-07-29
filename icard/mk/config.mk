@@ -37,7 +37,7 @@
 #
 
 # Path to top level ASF directory relative to this project directory.
-PRJ_PATH = ../..
+PRJ_PATH = ..
 
 # Microcontroller: atxmega128a1, atmega128, attiny261, etc.
 #MCU = atmega1284p
@@ -46,22 +46,22 @@ MCU = atmega88
 
 # Application target name. Given with suffix .a for library and .elf for a
 # standalone application.
-TARGET = ifcboard.elf
+TARGET = icard.elf
 
 # C source files located from the top-level source directory
 CSRCS = \
-       ../ifcboard/main.c                   \
-       ../ifcboard/cmd.c
+       src/main.c                   \
+       src/cmd.c
 
 # Assembler source files located from the top-level source directory
 ASSRCS = 
 
 # Include path located from the top-level source directory
 INC_PATH = \
-       board                                      \
-       utils                                       \
-       board/gcc                                       \
-       pt-1.4
+       src/config                            \
+       src/pt-1.4                          \
+       src/asf/mega/utils                 \
+       src/asf/common/utils                   
 
 # Library paths from the top-level source directory
 LIB_PATH = 
