@@ -22,14 +22,14 @@ static const unsigned char VERSION[] = {0, 0, 1};
 typedef struct
 {
 	unsigned char size;
-	int (*handler)(int size);
+	unsigned char (*handler)(unsigned char size);
 	int calls;
 } cmd_t;
 
-static int calculate_checksum(int size)
+static unsigned char calculate_checksum(unsigned char size)
 {
 	unsigned char sum = 0;
-	int i;
+	unsigned char i;
 	unsigned char *s = rx_buffer;
 
 	size = size - 1;
@@ -40,9 +40,9 @@ static int calculate_checksum(int size)
 	return sum;
 }
 
-static int checksum(int size)
+static unsigned char checksum(unsigned char size)
 {
-	int sum;
+	unsigned char sum;
 	unsigned char cs;
 
 	sum = calculate_checksum(size);
@@ -51,9 +51,9 @@ static int checksum(int size)
 	return (sum == cs);
 }
 
-static int send_command(int size)
+static unsigned char send_command(unsigned char size)
 {
-	int cs;
+	unsigned char cs;
 
 	cs = calculate_checksum(size);
 	rx_buffer[size - 1] = cs;
@@ -68,19 +68,19 @@ static int send_command(int size)
 	return 0;
 }
 
-static int cmd_error(int size)
+static unsigned char cmd_error(unsigned char size)
 {
 	return -1;
 }
 
-static int cmd_ping(int size)
+static unsigned char cmd_ping(unsigned char size)
 {
 	send_command(size);
 
 	return 0;
 }
 
-static int cmd_get_firmware_version(int size)
+static unsigned char cmd_get_firmware_version(unsigned char size)
 {
 	memcpy(&rx_buffer[PAYLOAD_OFFSET], VERSION, sizeof(VERSION));
 	size = size + sizeof(VERSION);
@@ -90,28 +90,35 @@ static int cmd_get_firmware_version(int size)
 }
 
 static const cmd_t commands[] = {
-		{ 0, 		cmd_error									}, // 0x00
-		{ 0, 		cmd_error									}, // 0x01
-		{ 0, 		cmd_error									}, // 0x02
-		{ 5, 		cmd_ping									}, // 0x03
-		{ 0, 		cmd_error									}, // 0x04
-		{ 0, 		cmd_error									}, // 0x05
-		{ 0, 		cmd_error									}, // 0x06
-		{ 0, 		cmd_error									}, // 0x07
-		{ 0, 		cmd_error									}, // 0x08
-		{ 0, 		cmd_error									}, // 0x09
-		{ 0, 		cmd_error									}, // 0x0A
-		{ 0, 		cmd_error									}, // 0x0B
-		{ 0, 		cmd_error									}, // 0x0C
-		{ 0, 		cmd_error									}, // 0x0D
-		{ 0, 		cmd_error									}, // 0x0E
-		{ 0, 		cmd_error									}, // 0x0F
-		{ 0, 		cmd_error									}, // 0x10
-		{ 5, 		cmd_get_firmware_version					}, // 0x11
-		{ 0, 		cmd_error									}, // 0x12
-		{ 0, 		cmd_error									}, // 0x13
-		{ 0, 		cmd_error									},
+		{ 0, 		cmd_error									}, // 0x00 - Reserved
+		{ 0, 		cmd_error									}, // 0x01 - Set debug output state
+		{ 0, 		cmd_error									}, // 0x02 - Set serial link rate
+		{ 5, 		cmd_ping									}, // 0x03 - Ping
+		{ 0, 		cmd_error									}, // 0x04 - Get status
+		{ 0, 		cmd_error									}, // 0x05 - Set fan
+		{ 0, 		cmd_error									}, // 0x06 - 48V set
+		{ 0, 		cmd_error									}, // 0x07 - GPIO set
+		{ 0, 		cmd_error									}, // 0x08 - GPIO read
+		{ 0, 		cmd_error									}, // 0x09 - SPI write
+		{ 0, 		cmd_error									}, // 0x0A - SPI read
+		{ 0, 		cmd_error									}, // 0x0B - MDIO read/write
+		{ 0, 		cmd_error									}, // 0x0C - Reserved
+		{ 0, 		cmd_error									}, // 0x0D - IIC read/write
+		{ 0, 		cmd_error									}, // 0x0E - Reserved
+		{ 0, 		cmd_error									}, // 0x0F - SFP read
+		{ 0, 		cmd_error									}, // 0x0E - Set configuration parameters
+		{ 5, 		cmd_get_firmware_version					}, // 0x0F - Write configuration parameters to EEPROM
+		{ 0, 		cmd_error									}, // 0x10 - Get configuration parameters
+		{ 0, 		cmd_error									}, // 0x11 - Get firmware version
+		{ 0, 		cmd_error									}, // 0x12 - Get statistics
+		{ 0, 		cmd_error									}, // 0x13 - Access memory
+		{ 0, 		cmd_error									}, // 0x14 - Invalidate configuration in the EEPOM
+		{ 0, 		cmd_error									}, // 0x15 - Get uptime
+		{ 0, 		cmd_error									}, // 0x16 - Software reset
+		{ 0, 		cmd_error									}, // 0x17 - Debug message
+		{ 0, 		cmd_error									}  // 0x18 - GPIO setup
 };
+
 
 #define COMMANDS_TOTAL (sizeof(commands)/sizeof(commands[0]))
 
@@ -125,7 +132,7 @@ static unsigned char commands_stat[0x20];
  */
 static char first_command = 1;
 
-static int shift_rx_buffer(void)
+static unsigned char shift_rx_buffer(void)
 {
 	cli();
 	rx_buffer_size--;
@@ -135,7 +142,7 @@ static int shift_rx_buffer(void)
 	return 0;
 }
 
-static int find_synchronization(void)
+static unsigned char find_synchronization(void)
 {
 	do
 	{
@@ -158,13 +165,13 @@ static int find_synchronization(void)
 }
 
 
-int process_command()
+unsigned char process_command()
 {
-	int ret = 0;
-	int res;
+	unsigned char ret = 0;
+	unsigned char res;
 	const cmd_t *cmd;
-	int expected_size, command_size;
-	int command_id;
+	unsigned char expected_size, command_size;
+	unsigned char command_id;
 
 	stat.process_command++;
 

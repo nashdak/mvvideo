@@ -7,7 +7,7 @@
  * Returns non-zero (size of the command) if a
  * complete command was handled in this call
  */
-int process_command(void);
+unsigned char process_command(void);
 
 
 typedef struct

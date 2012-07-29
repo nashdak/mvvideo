@@ -20,7 +20,7 @@
 
 stat_t stat;
 
-int uart_putchar(char c)
+unsigned char uart_putchar(char c)
 {
 	loop_until_bit_is_set(UCSR0A, UDRE0);
 	UDR0 = c;
@@ -33,7 +33,7 @@ static unsigned char tx_buffer[255];
 unsigned char rx_buffer[255];
 unsigned char rx_buffer_size = 0;
 
-int uart_tx_str(char *s)
+unsigned char uart_tx_str(char *s)
 {
     while (*s)
     {
@@ -44,7 +44,7 @@ int uart_tx_str(char *s)
     return 0;
 }
 
-int uart_tx_buffer(unsigned char *s, int len)
+unsigned char uart_tx_buffer(unsigned char *s, unsigned char len)
 {
 	while (len--)
 	{
@@ -54,7 +54,7 @@ int uart_tx_buffer(unsigned char *s, int len)
 	return 0;
 }
 
-int uart_tx_putbuf(unsigned char *s, int len)
+unsigned char uart_tx_putbuf(unsigned char *s, unsigned char len)
 {
 	while (len--)
 	{
@@ -105,7 +105,7 @@ static inline void board_init(void)
 	MCUCR &= ~ ((1 << SM0) | (1 << SM1) | (1 << SM2));
 }
 
-static int pt_uart_rx(struct pt *pt)
+static unsigned char pt_uart_rx(struct pt *pt)
 {
 	PT_BEGIN(pt);
 
@@ -118,7 +118,7 @@ static int pt_uart_rx(struct pt *pt)
 	PT_END(pt);
 }
 
-static int pt_uart_tx(struct pt *pt)
+static unsigned char pt_uart_tx(struct pt *pt)
 {
 	unsigned char c;
 	PT_BEGIN(pt);
