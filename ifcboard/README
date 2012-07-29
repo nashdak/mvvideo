@@ -1,9 +1,0 @@
-Interface board
---------------------------
-
-Manage fan controller, GE switch.
-
-You do something like this 
-
-git clone git@git.assembla.com:mbvideo.git
-make -C mbvideo/ifcboard/board/gcc
