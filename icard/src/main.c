@@ -95,7 +95,7 @@ static inline void uart_init(void)
 	UCSR0A &= ~(1 << U2X0);
 #endif
 
-	// enable receiver & transmitter, set IRG on Rx complete
+	// enable receiver & transmitter, set IRQ on Rx complete
 	UCSR0B = (1 << RXCIE0) | (1 << RXEN0) | (0 << TXCIE0) | (1 << TXEN0) | (0 << UCSZ02);
 
 	// 8 bits, 1 stop bit, no parity
