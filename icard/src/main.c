@@ -117,6 +117,11 @@ static inline void board_init(void)
 	MCUCR &= ~ ((1 << SM0) | (1 << SM1) | (1 << SM2));
 
 	// start system timer
+	// possible values for the prescaler: 1, 8, 32, 64, 128, 256
+	SYS_TIMER_PRESCALER = (7 << 0);
+#if __AVR_ATmega640__
+	SFIOR = (1 << TSM) | (1 << PSR0);
+#endif
 }
 
 static unsigned char pt_uart_rx(struct pt *pt)

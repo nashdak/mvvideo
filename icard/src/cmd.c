@@ -156,7 +156,7 @@ static unsigned char cmd_get_uptime(unsigned char size)
 {
 	unsigned int uptime;
 
-	uptime = READ_SYS_TIMER;
+	uptime = SYS_TIMER_COUNTER;
 	*(unsigned int *)(&rx_buffer[PAYLOAD_OFFSET]) = uptime;
 
 	// uptime is 16 bits of seconds

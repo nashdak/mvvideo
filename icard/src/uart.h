@@ -28,5 +28,10 @@ extern unsigned char rx_buffer_size;
 
 unsigned char uart_tx_putbuf(unsigned char *s, unsigned char len);
 
+/**
+ * Send debug message out
+ */
+#define PRINTF(fmt, ...)
+
 #endif
 

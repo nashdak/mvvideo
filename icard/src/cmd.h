@@ -41,6 +41,7 @@ extern char watchdog_enabled;
 
 // Timer1 or Timer3
 // This macro requires #include <avr/io.h>
-#define READ_SYS_TIMER (TCNT1)
+#define SYS_TIMER_COUNTER (TCNT1)
+#define SYS_TIMER_PRESCALER (TCCR1B)
 
 #endif
