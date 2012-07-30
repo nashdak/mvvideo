@@ -106,6 +106,7 @@ class UartBridge(asynchat.async_chat):
 class TestBase(unittest.TestCase):
 
     def setUp(self):
+        self.first = True
         self.startAvr();
         pass
 
@@ -169,24 +170,33 @@ class TestBase(unittest.TestCase):
         self.uartBridge.send_str(s);
         self.time_passed(0.05*len(s))
 
+
+def gettestaddress():
+    TEST_ADDRESS = 0x8000 + 0x1000 - 2
+    bytes = []
+    bytes.append((TEST_ADDRESS >> 0) & 0xFF); 
+    bytes.append((TEST_ADDRESS >> 8) & 0xFF);
+    
+    return bytes; 
               
 class TestUart(TestBase):
 
     def test_sendping(self):
-        self.sendping(True);
-        self.sendping(False);
+        self.sendping(self.first);
+        self.first = False
+        self.sendping(self.first);
 
     def test_getstatus(self):
         self.sendCommand([0x04], [])
         serial = self.uartBridge.read()
         bytes = stringToBytes(serial)
-        self.messageSanityCheck(bytes, 0x3, 3, first)
+        self.messageSanityCheck(bytes, 0x3, 3, self.first)
 
     def test_getfirmwareversion(self):
         self.sendCommand([0x13], [])
         serial = self.uartBridge.read()
         bytes = stringToBytes(serial)
-        self.messageSanityCheck(bytes, 0x3, 3, first)
+        self.messageSanityCheck(bytes, 0x3, 3, self.first)
 
     def test_getstatistics(self):
         self.sendCommand([0x14], [])
@@ -194,23 +204,47 @@ class TestUart(TestBase):
         bytes = stringToBytes(serial)
         # size of the statistics is going to change frequently
         # I do not want to check the message size  
-        self.messageSanityCheck(bytes, 0x3, None, first)
+        self.messageSanityCheck(bytes, 0x3, None, self.first)
     
     def test_accessmemoryread8(self):
-        self.sendCommand([0x15], [0xd7, 0x03, 0x80])
+        testaddress = gettestaddress();
+        payload = [0] + testaddress + [0, 0];
+        self.sendCommand([0x15], payload)
         serial = self.uartBridge.read()
         bytes = stringToBytes(serial)
-        self.messageSanityCheck(bytes, 0x3, None, first)
+        self.messageSanityCheck(bytes, 0x3, None, self.first)
     
+    def test_accessmemoryread16(self):
+        testaddress = gettestaddress();
+        payload = [2] + testaddress + [0, 0];
+        self.sendCommand([0x15], payload)
+        serial = self.uartBridge.read()
+        bytes = stringToBytes(serial)
+        self.messageSanityCheck(bytes, 0x3, None, self.first)
+
+    def test_accessmemorywrite8(self):
+        testaddress = gettestaddress();
+        payload = [1] + testaddress + [0xEA, D7];
+        self.sendCommand([0x15], payload)
+        serial = self.uartBridge.read()
+        bytes = stringToBytes(serial)
+        self.messageSanityCheck(bytes, 0x3, None, self.first)
+    
+    def test_accessmemorywrite16(self):
+        testaddress = gettestaddress();
+        payload = [3] + testaddress + [0x71, 0x8E];
+        self.sendCommand([0x15], payload)
+        serial = self.uartBridge.read()
+        bytes = stringToBytes(serial)
+        self.messageSanityCheck(bytes, 0x3, None, self.first)
+        
     def sendping(self, first):
         self.sendCommand([0x03], [])
         serial = self.uartBridge.read()
         
         bytes = stringToBytes(serial)
-        self.messageSanityCheck(bytes, 0x3, 5, first)
+        self.messageSanityCheck(bytes, 0x3, 5, self.first)
         
-    def gettestaddress(self):
-        TEST_ADDRESS = 0x8000 + 0x1000 - 2 
 
 
 if __name__ == "__main__":
