@@ -96,13 +96,13 @@ static inline void uart_init(void)
 #endif
 
 	// enable receiver & transmitter, set IRG on Rx complete
-	UCSR0B |= (1 << RXCIE0) | (1 << RXEN0) | (1 << TXEN0);
+	UCSR0B = (1 << RXCIE0) | (1 << RXEN0) | (0 << TXCIE0) | (1 << TXEN0) | (0 << UCSZ02);
+
+	// 8 bits, 1 stop bit, no parity
+	UCSR0C = (2 << UPM00) | (0 << USBS0) | (1 << UCSZ00) | (1 << UCSZ01);
+
+	// wait while Tx is ready
 	loop_until_bit_is_set(UCSR0A, UDRE0);
-
-	// 8 buts, 1 stop bit, no parity
-	UCSR0C |= (1 << UCSZ01) | (1 << UCSZ00);
-
-
 }
 
 static inline void board_init(void)
