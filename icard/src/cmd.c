@@ -110,7 +110,7 @@ static unsigned char cmd_get_statistics(unsigned char size)
 }
 
 /**
- * Command always contains 5 bytes in the payload and
+ * Command always contains 5 bytes in the payload
  * Response contains 5 bytes
  * 1 byte access type: 0-read8,1-write8,2-read16,3-write16
  * 2 bytes of address

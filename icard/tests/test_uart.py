@@ -115,7 +115,17 @@ class TestBase(unittest.TestCase):
         pass
 
     def messageSanityCheck(self, bytes, commandId, expectedSize, first):
-        self.assertEqual(len(bytes), expectedSize, "Message length is "+str(len(bytes)));
+        '''
+        Check that the response has correct size, message Id, checksum 
+        @param bytes: list of bytes
+        @param commandId: message identifier
+        @param expectedSize: expected size of the response
+        @param first: is is a first response  
+        @raise exception: unittest.TestCase.assertEqual 
+        @return: None
+        '''
+        if (expectedSize != None):
+            self.assertEqual(len(bytes), expectedSize, "Message length is "+str(len(bytes)));
         self.assertEqual(bytes[0], 0x7f, "1st sync byte is "+str(bytes[0]));                             
         self.assertEqual(bytes[1], 0xef, "2nd sync byte is "+str(bytes[1]));                             
         if (first):                                                                                      
@@ -162,18 +172,45 @@ class TestBase(unittest.TestCase):
               
 class TestUart(TestBase):
 
-    def test_sendecho(self):
-        #self.time_passed(0.05)
-        self.sendecho(True);
-        self.sendecho(False);
+    def test_sendping(self):
+        self.sendping(True);
+        self.sendping(False);
+
+    def test_getstatus(self):
+        self.sendCommand([0x04], [])
+        serial = self.uartBridge.read()
+        bytes = stringToBytes(serial)
+        self.messageSanityCheck(bytes, 0x3, 3, first)
+
+    def test_getfirmwareversion(self):
+        self.sendCommand([0x13], [])
+        serial = self.uartBridge.read()
+        bytes = stringToBytes(serial)
+        self.messageSanityCheck(bytes, 0x3, 3, first)
+
+    def test_getstatistics(self):
+        self.sendCommand([0x14], [])
+        serial = self.uartBridge.read()
+        bytes = stringToBytes(serial)
+        # size of the statistics is going to change frequently
+        # I do not want to check the message size  
+        self.messageSanityCheck(bytes, 0x3, None, first)
     
-    def sendecho(self, first):
+    def test_accessmemoryread8(self):
+        self.sendCommand([0x15], [0xd7, 0x03, 0x80])
+        serial = self.uartBridge.read()
+        bytes = stringToBytes(serial)
+        self.messageSanityCheck(bytes, 0x3, None, first)
+    
+    def sendping(self, first):
         self.sendCommand([0x03], [])
         serial = self.uartBridge.read()
         
         bytes = stringToBytes(serial)
+        self.messageSanityCheck(bytes, 0x3, 5, first)
         
-        #self.messageSanityCheck(bytes, 0x3, 5, first)
+    def gettestaddress(self):
+        TEST_ADDRESS = 0x8000 + 0x1000 - 2 
 
 
 if __name__ == "__main__":
