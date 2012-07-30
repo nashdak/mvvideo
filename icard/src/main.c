@@ -115,6 +115,8 @@ static inline void board_init(void)
 
 	// Sleep mode - idle
 	MCUCR &= ~ ((1 << SM0) | (1 << SM1) | (1 << SM2));
+
+	// start system timer
 }
 
 static unsigned char pt_uart_rx(struct pt *pt)
