@@ -14,6 +14,7 @@ typedef struct
 {
 	int uart_rx_irq;
 	int uart_rx_irq_add;
+	int uart_rx_of;
 	int process_command;
 	int process_command_fs_1;
 	int process_command_fs_2;
@@ -23,6 +24,8 @@ typedef struct
 	int process_command_bad_cs;
 	int process_command_handler;
 	int process_command_handler_done;
+	int process_command_am_read;
+	int process_command_am_write;
 } stat_t;
 
 extern stat_t stat;

@@ -4,6 +4,7 @@
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
 #include <avr/sleep.h>
+#include <avr/wdt.h>
 
 #include "uart.h"
 #include "cmd.h"
@@ -19,6 +20,7 @@ static const unsigned char VERSION[] = {0, 0, 1};
 #define PAYLOAD_SIZE_OFFSET 3
 #define COMMAND_ID_OFFSET 2
 
+#define READ_ACCESS 0
 
 typedef struct
 {
@@ -92,26 +94,71 @@ static unsigned char cmd_get_firmware_version(unsigned char size)
 
 static unsigned char cmd_get_statistics(unsigned char size)
 {
+	unsigned char stat_size = sizeof(stat);
+
+	memcpy(&rx_buffer[PAYLOAD_OFFSET], &stat, stat_size);
+	size = size + stat_size;
+	send_command(size);
+
 	return 0;
 }
 
 static unsigned char cmd_access_memory(unsigned char size)
 {
+	unsigned char *cmd = &rx_buffer[PAYLOAD_OFFSET];
+	char type = cmd[0];
+	unsigned int *address = (unsigned int*)&cmd[1];
+	char value;
+
+	if (type == READ_ACCESS)
+	{
+		stat.process_command_am_read++;
+		value = *address;
+	}
+	else
+	{
+		stat.process_command_am_write++;
+		value = cmd[3];
+		*address = value;
+	}
+	size = size - 3 + 1;
+	send_command(size);
+
 	return 0;
 }
 
 static unsigned char cmd_get_uptime(unsigned char size)
 {
+	// uptime is 32 bits of seconds
+	size = size + 4;
+	send_command(size);
+
 	return 0;
 }
 
 static unsigned char cmd_software_reset(unsigned char size)
 {
+	size = size + sizeof(VERSION);
+	send_command(size);
+
+	// Enable the watchdog, let some time to send the bytes
+	// Possible values for timeout WDTO_15MS, WDTO_30MS,WDTO_60MS,
+	// WDTO_120MS,WDTO_250MS,WDTO_500MS,WDTO_1S,WDTO_2S
+
+	wdt_enable(WDTO_30MS);
+	wdt_reset();
+
 	return 0;
 }
 
 static unsigned char cmd_get_status(unsigned char size)
 {
+	unsigned char system_status_size = sizeof(system_status);
+
+	memcpy(&rx_buffer[PAYLOAD_OFFSET], &system_status, system_status_size);
+	size = size + system_status_size;
+	send_command(size);
+
 	return 0;
 }
 
@@ -120,7 +167,7 @@ static const cmd_t commands[] = {
 		{ 0, 		cmd_error									}, // 0x01 - Set debug output state
 		{ 0, 		cmd_error									}, // 0x02 - Set serial link rate
 		{ 5, 		cmd_ping									}, // 0x03 - Ping
-		{ 0, 		cmd_get_status								}, // 0x04 - Get status
+		{ 5, 		cmd_get_status								}, // 0x04 - Get status
 		{ 0, 		cmd_error									}, // 0x05 - Set fan
 		{ 0, 		cmd_error									}, // 0x06 - 48V set
 		{ 0, 		cmd_error									}, // 0x07 - GPIO set
@@ -133,14 +180,14 @@ static const cmd_t commands[] = {
 		{ 0, 		cmd_error									}, // 0x0E - Reserved
 		{ 0, 		cmd_error									}, // 0x0F - SFP read
 		{ 0, 		cmd_error									}, // 0x10 - Set configuration parameters
-		{ 5, 		cmd_error									}, // 0x11 - Write configuration parameters to EEPROM
+		{ 0, 		cmd_error									}, // 0x11 - Write configuration parameters to EEPROM
 		{ 0, 		cmd_error									}, // 0x12 - Get configuration parameters
-		{ 0, 		cmd_get_firmware_version					}, // 0x13 - Get firmware version
-		{ 0, 		cmd_get_statistics                          }, // 0x14 - Get statistics
-		{ 0, 		cmd_access_memory                           }, // 0x15 - Access memory
+		{ 5, 		cmd_get_firmware_version					}, // 0x13 - Get firmware version
+		{ 5, 		cmd_get_statistics                          }, // 0x14 - Get statistics
+		{ 9, 		cmd_access_memory                           }, // 0x15 - Access memory
 		{ 0, 		cmd_error									}, // 0x16 - Invalidate configuration in the EEPOM
-		{ 0, 		cmd_get_uptime                              }, // 0x17 - Get uptime
-		{ 0, 		cmd_software_reset                          }, // 0x18 - Software reset
+		{ 5, 		cmd_get_uptime                              }, // 0x17 - Get uptime
+		{ 5, 		cmd_software_reset                          }, // 0x18 - Software reset
 		{ 0, 		cmd_error									}, // 0x19 - Debug message
 		{ 0, 		cmd_error									}  // 0x1A - GPIO setup
 };

@@ -69,9 +69,13 @@ ISR(USART_RX_vect)
 	unsigned char b = UDR0;
 	if (rx_buffer_size < sizeof(rx_buffer))
 	{
-	  stat.uart_rx_irq_add++;
-	  rx_buffer[rx_buffer_size] = b;
-	  rx_buffer_size++;
+		stat.uart_rx_irq_add++;
+		rx_buffer[rx_buffer_size] = b;
+		rx_buffer_size++;
+	}
+	else
+	{
+		stat.uart_rx_of++;
 	}
 	stat.uart_rx_irq++;
 }
