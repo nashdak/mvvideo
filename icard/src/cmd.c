@@ -20,7 +20,13 @@ static const unsigned char VERSION[] = {0, 0, 1};
 #define PAYLOAD_SIZE_OFFSET 3
 #define COMMAND_ID_OFFSET 2
 
-#define READ_ACCESS 0
+#define READ_ACCESS_8 0
+#define WRITE_ACCESS_8 1
+#define READ_ACCESS_16 2
+#define WRITE_ACCESS_16 3
+
+#define IS_READ_ACCESS(type) (((type) & 0x01) == 0)
+#define IS_ACCESS_8(type) (((type) & 0x02) == 0)
 
 typedef struct
 {
@@ -103,25 +109,44 @@ static unsigned char cmd_get_statistics(unsigned char size)
 	return 0;
 }
 
+/**
+ * Command always contains 5 bytes in the payload and
+ * Response contains 5 bytes
+ * 1 byte access type: 0-read8,1-write8,2-read16,3-write16
+ * 2 bytes of address
+ * 2 bytes of value
+ */
 static unsigned char cmd_access_memory(unsigned char size)
 {
 	unsigned char *cmd = &rx_buffer[PAYLOAD_OFFSET];
 	char type = cmd[0];
 	unsigned int *address = (unsigned int*)&cmd[1];
-	char value;
+	unsigned int value;
 
-	if (type == READ_ACCESS)
+	switch (type)
 	{
+	case READ_ACCESS_8:
 		stat.process_command_am_read++;
-		value = *address;
-	}
-	else
-	{
+		value = *(unsigned char*)address;
+		*(unsigned int*)&cmd[3] = (unsigned int)(value & 0xFF);
+		break;
+	case READ_ACCESS_16:
+		stat.process_command_am_read++;
+		value = *(unsigned int*)address;
+		*(unsigned int*)&cmd[3] = (unsigned int)value;
+		break;
+	case WRITE_ACCESS_8:
 		stat.process_command_am_write++;
-		value = cmd[3];
-		*address = value;
+		value = *(unsigned int*)&cmd[3];
+		*(unsigned char*)address = (unsigned char)(value & 0xFF);
+		break;
+	case WRITE_ACCESS_16:
+		stat.process_command_am_write++;
+		value = *(unsigned int*)&cmd[3];
+		*(unsigned int*)address = (unsigned int)value;
+		break;
 	}
-	size = size - 3 + 1;
+
 	send_command(size);
 
 	return 0;
@@ -129,8 +154,13 @@ static unsigned char cmd_access_memory(unsigned char size)
 
 static unsigned char cmd_get_uptime(unsigned char size)
 {
-	// uptime is 32 bits of seconds
-	size = size + 4;
+	unsigned int uptime;
+
+	uptime = READ_SYS_TIMER;
+	*(unsigned int *)(&rx_buffer[PAYLOAD_OFFSET]) = uptime;
+
+	// uptime is 16 bits of seconds
+	size = size + 2;
 	send_command(size);
 
 	return 0;

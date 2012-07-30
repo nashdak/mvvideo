@@ -39,4 +39,8 @@ typedef struct
 extern system_status_t system_status;
 extern char watchdog_enabled;
 
+// Timer1 or Timer3
+// This macro requires #include <avr/io.h>
+#define READ_SYS_TIMER (TCNT1)
+
 #endif
