@@ -20,6 +20,9 @@
 
 stat_t stat;
 
+// Should I reset the WD in the main loop
+char watchdog_enabled;
+
 unsigned char uart_putchar(char c)
 {
 	loop_until_bit_is_set(UCSR0A, UDRE0);
@@ -107,6 +110,9 @@ static inline void board_init(void)
 	wdt_reset();
 	wdt_disable();
 
+	// Should I reset the WD in the main loop
+	watchdog_enabled = 1;
+
 	// Sleep mode - idle
 	MCUCR &= ~ ((1 << SM0) | (1 << SM1) | (1 << SM2));
 }
@@ -180,6 +186,11 @@ int main(void)
 		pt_uart_rx(&pt_uart_rx_state);
 
 		pt_poll_status(&pt_poll_status_state);
+
+		if (watchdog_enabled)
+		{
+			wdt_reset();
+		}
 	}
 
 	cli();

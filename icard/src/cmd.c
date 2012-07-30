@@ -141,10 +141,11 @@ static unsigned char cmd_software_reset(unsigned char size)
 	size = size + sizeof(VERSION);
 	send_command(size);
 
-	// Enable the watchdog, let some time to send the bytes
+	// Do not reset WD in the main loop
+	watchdog_enabled = 0;
+	// Enable the WD, let some time to send the bytes
 	// Possible values for timeout WDTO_15MS, WDTO_30MS,WDTO_60MS,
 	// WDTO_120MS,WDTO_250MS,WDTO_500MS,WDTO_1S,WDTO_2S
-
 	wdt_enable(WDTO_30MS);
 	wdt_reset();
 

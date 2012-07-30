@@ -37,5 +37,6 @@ typedef struct
 } system_status_t;
 
 extern system_status_t system_status;
+extern char watchdog_enabled;
 
 #endif
