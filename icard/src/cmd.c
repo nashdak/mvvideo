@@ -19,6 +19,7 @@ static const unsigned char VERSION[] = {0, 0, 1};
 #define PAYLOAD_OFFSET 4
 #define PAYLOAD_SIZE_OFFSET 3
 #define COMMAND_ID_OFFSET 2
+#define HEADER_SIZE PAYLOAD_OFFSET
 
 #define READ_ACCESS_8 0
 #define WRITE_ACCESS_8 1
@@ -64,8 +65,11 @@ static unsigned char send_command(unsigned char size)
 {
 	unsigned char cs;
 
+	rx_buffer[PAYLOAD_SIZE_OFFSET] = size - HEADER_SIZE;
+
 	cs = calculate_checksum(size);
 	rx_buffer[size - 1] = cs;
+
 	uart_tx_buffer(rx_buffer, size);
 
 #if (PRINT_TRACE != 0)

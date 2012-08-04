@@ -28,9 +28,9 @@ ELFNAME = None;
 def calculateChecksum(data):
     sum = 0;
     for b in data:
-        sum = sum + b;
+        sum = sum + (b & 0xFF);
         sum = sum & 0xFF
-    sum = ~sum+1
+    sum = (~sum)+1
     sum = sum & 0xFF
     return sum;
 
@@ -126,7 +126,7 @@ class TestBase(unittest.TestCase):
         @return: None
         '''
         if (expectedSize != None):
-            self.assertEqual(len(bytes), expectedSize, "Message length is "+str(len(bytes)));
+            self.assertEqual(len(bytes), expectedSize, "Message length "+str(len(bytes))+", expected size "+str(expectedSize));
         self.assertEqual(bytes[0], 0x7f, "1st sync byte is "+str(bytes[0]));                             
         self.assertEqual(bytes[1], 0xef, "2nd sync byte is "+str(bytes[1]));                             
         if (first):                                                                                      
@@ -137,7 +137,7 @@ class TestBase(unittest.TestCase):
                                                                                                          
         bytesWithoutChecksum = bytes[:-1]                                                                
         csExpected = calculateChecksum(bytesWithoutChecksum)                                             
-        csActual = bytes[4]                                                                              
+        csActual = bytes[len(bytes)-1]                                                                              
         self.assertEqual(csActual, csExpected, "Checksum is "+hex(csActual)+" instead "+hex(csExpected));
 
     def startAvr(self):
@@ -183,14 +183,14 @@ class TestUart(TestBase):
 
     def test_sendping(self):
         self.sendping(self.first);
-        self.first = False
-        self.sendping(self.first);
+        #self.first = False
+        #self.sendping(self.first);
 
     def test_getstatus(self):
         self.sendCommand([0x04], [])
         serial = self.uartBridge.read()
         bytes = stringToBytes(serial)
-        self.messageSanityCheck(bytes, 0x3, 3, self.first)
+        self.messageSanityCheck(bytes, 0x4, 8, self.first)
 
     def test_getfirmwareversion(self):
         self.sendCommand([0x13], [])
