@@ -51,6 +51,7 @@ TARGET = icard.elf
 # C source files located from the top-level source directory
 CSRCS = \
        src/main.c                   \
+       src/i2c.c                   \
        src/cmd.c
 
 # Assembler source files located from the top-level source directory
@@ -74,7 +75,7 @@ LIBS =
 DBGFLAGS = 
 
 # Optimization settings
-OPTIMIZATION = -O0
+OPTIMIZATION = -O2
 
 # Extra flags used when creating an EEPROM Intel HEX file. By default the
 # common Makefile.in will add -j .eeprom
