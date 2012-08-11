@@ -12,7 +12,20 @@ typedef struct
 	unsigned char (*read)(unsigned char ack);
 } i2c_device_t;
 
+
+#define I2C_IFC_SPF1 0
+#define I2C_IFC_SPF1 1
+#define I2C_IFC_FAN 2
+
+/**
+ * Use I2C_IFC_X for index in the array
+ */
 extern const i2c_device_t i2c_devices[3];
+
+/**
+ * Set of functions which call the correct
+ * I2C API
+ */
 
 inline void i2c_init(const i2c_device_t *device);
 inline void i2c_start(const i2c_device_t *device);
