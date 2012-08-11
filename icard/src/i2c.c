@@ -202,6 +202,13 @@ void i2c_hw_init(void)
     sei();
 }
 
+inline void i2c_hw_waitforcomplete(void);
+inline void i2c_hw_waitforcomplete(void)
+{
+	// wait for i2c interface to complete operation
+	while( !(inb(TWCR) & _BV(TWINT)) );
+}
+
 void i2c_hw_start(void)
 {
 	outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|_BV(TWINT)|_BV(TWSTA));
@@ -216,19 +223,37 @@ void i2c_hw_stop(void)
 
 unsigned char i2c_hw_write(unsigned char data)
 {
+	unsigned char ack;
 	// save data to the TWDR
     outb(TWDR, data);
     // begin send
     outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|_BV(TWINT));
 
-    return 0;
+    i2c_hw_waitforcomplete();
+
+	ack = (inb(TWSR) == TW_MT_SLA_ACK);
+	return ack;
 }
 
 
 unsigned char i2c_hw_read(unsigned char ack)
 {
+	unsigned char b;
+
+	if (ack)
+	{
+		outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|_BV(TWINT)|_BV(TWEA));
+	}
+	else
+	{
+		outb(TWCR, (inb(TWCR)&TWCR_CMD_MASK)|_BV(TWINT));
+	}
+    i2c_hw_waitforcomplete();
+
     // retrieve received data byte from i2c TWDR
-    return( inb(TWDR) );
+    b = inb(TWDR);
+
+    return b;
 }
 
 
