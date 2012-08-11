@@ -17,7 +17,6 @@
 #define LC_INCLUDE "lc-addrlabels.h"
 #include "pt.h"
 
-
 stat_t stat;
 
 // Should I reset the WD in the main loop

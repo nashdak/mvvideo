@@ -21,6 +21,15 @@
 #define I2C_CLOCK_HI() I2C_DDR &= ~(1 << I2C_CLK);
 #define I2C_CLOCK_LO() I2C_DDR |= (1 << I2C_CLK);
 
+const i2c_device_t i2c_devices[3] = {
+		{i2c_sw_init, i2c_sw_start, i2c_sw_stop, i2c_sw_write, i2c_sw_read},
+		{i2c_sw_init, i2c_sw_start, i2c_sw_stop, i2c_sw_write, i2c_sw_read},
+		{i2c_hw_init, i2c_hw_start, i2c_hw_stop, i2c_hw_write, i2c_hw_read}
+};
+
+static void i2c_sw_writebit(unsigned char c);
+static unsigned char i2c_sw_readbit(void);
+
 void i2c_sw_writebit(unsigned char c)
 {
 	if (c > 0)
@@ -203,6 +212,7 @@ void i2c_hw_init(void)
 }
 
 inline void i2c_hw_waitforcomplete(void);
+
 inline void i2c_hw_waitforcomplete(void)
 {
 	// wait for i2c interface to complete operation
