@@ -4,7 +4,7 @@
 ***********************************************************************************************************************
 #
 # NAME
-# smp.h
+# vision_mng.h
 #
 # DESCRIPTION
 # This module contains Shelf Management Package calls export defintions
@@ -45,10 +45,8 @@
 #   $NoKeywords$
 **********************************************************************************************************************/
 
-
-
-#ifndef _SMP_H
-#define _SMP_H
+#ifndef _VISION_MNG_H
+#define _VISION_MNG_H
 
 
 /* ##### General Definitions ##### */
@@ -58,28 +56,23 @@
 /* ##### Types/Constants/Externals ##### */
 /* ##### */
 
-
-/*********************************************************************************************
-	PUBLIC SECTION: BEGIN
-*********************************************************************************************/
-
 /* ##### Constant Definitions ##### */
 
 /* Error codes */
-#define SMP_STATUS_OK                1         /* the operation is completed successfully */
-#define SMP_STATUS_ERROR            -1         /* an error has occurred */
-#define SMP_STATUS_INV_ARG          -2         /* invalid argument */
-#define SMP_STATUS_RESET            -3         /* the operation was interrupted by card reset */
-#define SMP_STATUS_TIMEOUT          -4         /* semaphore timeout has occurred */
-#define SMP_STATUS_NO_CRD_RESPONSE  -5         /* card does not response */
-#define SMP_STATUS_NO_DEV_RESPONSE  -6         /* card hardware does not response */
+#define VISION_MNG_STATUS_OK                1         /* the operation is completed successfully */
+#define VISION_MNG_STATUS_ERROR            -1         /* an error has occurred */
+#define VISION_MNG_STATUS_INV_ARG          -2         /* invalid argument */
+#define VISION_MNG_STATUS_RESET            -3         /* the operation was interrupted by card reset */
+#define VISION_MNG_STATUS_TIMEOUT          -4         /* semaphore timeout has occurred */
+#define VISION_MNG_STATUS_NO_CRD_RESPONSE  -5         /* card does not response */
+#define VISION_MNG_STATUS_NO_DEV_RESPONSE  -6         /* card hardware does not response */
 
 
 
 /* Timeout constants*/
-#define SMP_WAITFOREVER             -1
+#define VISION_MNG_WAITFOREVER             -1
 
-#define SMP_NO_WAIT                  0
+#define VISION_MNG_NO_WAIT                  0
 
 /*
  The package communicates with the interface board and other board carrying a CPU 
@@ -92,244 +85,177 @@
 */
 
 /* Wait for synchronization timeout in ms. If expiries, 
-   the SMP_STATUS_TIMEOUT error code will be returned by API
+   the VISION_MNG_STATUS_TIMEOUT error code will be returned by API
 */
-#define SMP_DEF_SYNC_TIMEOUT         100
+#define VISION_MNG_DEF_SYNC_TIMEOUT         100
 
 /* 
    Wait for card reply timeout in ms. If expiries,                           
-   the SMP_STATUS_NO_CRD_RESPONSE error code will be returned by API
+   the VISION_MNG_STATUS_NO_CRD_RESPONSE error code will be returned by API
 */ 
-#define SMP_DEF_RESP_TIMEOUT         50         
+#define VISION_MNG_DEF_RESP_TIMEOUT         50         
 
 
 /* Wait for peripheral device timeout in ms using by Firmware. If expiries, 
-   the SMP_STATUS_NO_DEV_RESPONSE error code will be returned by API
+   the VISION_MNG_STATUS_NO_DEV_RESPONSE error code will be returned by API
 */
-#define SMP_DEF_I2C_TIMEOUT          10
+#define VISION_MNG_DEF_I2C_TIMEOUT          10
 
-
-
-/* ##### Macro Definitions ##### */
-/* ##### */
-#define SMP_PORT_BIT(port)  ( 0x00000001 << (port) )
 
 /* ##### Type Definitions ##### */
 
 /* Expansion boards slot enumeration */ 
-enum smp_slot {
-	SMP_SLOT_1,
-	SMP_SLOT_2,
-	SMP_SLOT_3
+enum vision_mng_slot {
+	VISION_MNG_SLOT_1,
+	VISION_MNG_SLOT_2,
+	VISION_MNG_SLOT_3
 };
 
 /* 48V ON/OFF action enumeration */ 
-enum smp_48v_action {
-	SMP_48V_OFF,
-	SMP_48V_ON
+enum vision_mng_48v_action {
+	VISION_MNG_48V_OFF,
+	VISION_MNG_48V_ON
 };
 
 /* FANs enumeration */ 
-enum smp_fans {
-	SMP_FAN_1,
-	SMP_FAN_2
+enum vision_mng_fans {
+	VISION_MNG_FAN_1,
+	VISION_MNG_FAN_2
 };
 
 /* Boolean enumeration, for boolean flags */ 
-enum smp_bool {
-	SMP_FALSE,
-	SMP_TRUE
+enum vision_mng_bool {
+	VISION_MNG_FALSE,
+	VISION_MNG_TRUE
 };
 
 /* Port status enumeration */ 
-enum smp_port_status {
-	SMP_PORT_DOWN,			   /* The port is disabled or there is a fault 
+enum vision_mng_port_status {
+	VISION_MNG_PORT_DOWN,			   /* The port is disabled or there is a fault 
 								  that prevents it from going to the up*/
 
-	SMP_PORT_UP,			   /* Port is UP */
+	VISION_MNG_PORT_UP,			   /* Port is UP */
 
-	SMP_PORT_NOT_PRESENT,	   /* the interface has  missing components */
+	VISION_MNG_PORT_NOT_PRESENT,	   /* the interface has  missing components */
 };
 
 
 /* Ethernet Port speed enumeration */ 
-enum smp_eth_speed {
-	SMP_10B_HD,			/*10 Mbps half-duplex*/
-	SMP_10B_FD,			/*10 Mbps full-duplex*/
-	SMP_100B_HD,		/*100 Mbps half-duplex*/ 
-	SMP_100B_FD,		/*100 Mbps full-duplex*/ 
-	SMP_1000B_HD,		/*1000 Mbps half-duplex*/ 
-	SMP_1000B_FD,		/*1000 Mbps full-duplex*/ 
+enum vision_mng_eth_speed {
+	VISION_MNG_10B_HD,			/*10 Mbps half-duplex*/
+	VISION_MNG_10B_FD,			/*10 Mbps full-duplex*/
+	VISION_MNG_100B_HD,		/*100 Mbps half-duplex*/ 
+	VISION_MNG_100B_FD,		/*100 Mbps full-duplex*/ 
+	VISION_MNG_1000B_HD,		/*1000 Mbps half-duplex*/ 
+	VISION_MNG_1000B_FD,		/*1000 Mbps full-duplex*/ 
 };
 
 
 /* Ethernet Port auto-negotiation status enumeration */ 
-enum smp_autoneg_status {
-	SMP_AUTONEG_CONFIGURING,   /* auto-negotiation is in process */
-	SMP_AUTONEG_COMPLETE,	   /* auto-negotiation is complete */
-	SMP_AUTONEG_DISABLED,	   /* auto-negotiation mechanism is disabled */
-	SMP_AUTONEG_FAULTY,		   /* auto-negotiation is faulty */
+enum vision_mng_autoneg_status {
+	VISION_MNG_AUTONEG_CONFIGURING,   /* auto-negotiation is in process */
+	VISION_MNG_AUTONEG_COMPLETE,	   /* auto-negotiation is complete */
+	VISION_MNG_AUTONEG_DISABLED,	   /* auto-negotiation mechanism is disabled */
+	VISION_MNG_AUTONEG_FAULTY,		   /* auto-negotiation is faulty */
 };
 
 /* System Ports enumeration */ 
-enum smp_port {
-	SMP_IFC_HOST_PORT,		   /* interface board host GE interface */
-	SMP_IFC_EXP1_PORT,		   /* interface board expansion slot#1 GE interface */
-	SMP_IFC_EXP2_PORT,		   /* interface board expansion slot#2 GE interface */
-	SMP_IFC_EXP3_PORT,		   /* interface board expansion slot#3 GE interface */
-	SMP_IFC_SFP1_PORT,		   /* interface board SFP#1 GE interface */
-	SMP_IFC_SFP2_PORT,		   /* interface board SFP#2 GE interface */
+enum vision_mng_port {
+	VISION_MNG_IFC_COMBO1_PORT,		   /* interface board COMBO#1 GE interface */
+	VISION_MNG_IFC_COMBO2_PORT,		   /* interface board COMBO#2 GE interface */
 
-	SMP_EXP1_BCKP_PORT,		   /* expansion board#1 backplane GE interface */            
-	SMP_EXP1_FET1_PORT,		   /* expansion board#1 fast-ethernet interface#1 */
-	SMP_EXP1_FET2_PORT,		   /* expansion board#1 fast-ethernet interface#2 */
-	SMP_EXP1_FET3_PORT,		   /* expansion board#1 fast-ethernet interface#3 */
-	SMP_EXP1_FET4_PORT,		   /* expansion board#1 fast-ethernet interface#4 */
-	SMP_EXP1_FET5_PORT,		   /* expansion board#1 fast-ethernet interface#5 */
-	SMP_EXP1_FET6_PORT,		   /* expansion board#1 fast-ethernet interface#6 */
-	SMP_EXP1_FET7_PORT,		   /* expansion board#1 fast-ethernet interface#7 */
-	SMP_EXP1_FET8_PORT,		   /* expansion board#1 fast-ethernet interface#8 */
-	SMP_EXP1_SFP1_PORT,		   /* expansion board#1 SFP#1 GE interface */  
-	SMP_EXP1_SFP2_PORT,		   /* expansion board#1 SFP#2 GE interface */  
+	VISION_MNG_EXP1_FET1_PORT,		   /* expansion board#1 fast-ethernet interface#1 */
+	VISION_MNG_EXP1_FET2_PORT,		   /* expansion board#1 fast-ethernet interface#2 */
+	VISION_MNG_EXP1_FET3_PORT,		   /* expansion board#1 fast-ethernet interface#3 */
+	VISION_MNG_EXP1_FET4_PORT,		   /* expansion board#1 fast-ethernet interface#4 */
+	VISION_MNG_EXP1_FET5_PORT,		   /* expansion board#1 fast-ethernet interface#5 */
+	VISION_MNG_EXP1_FET6_PORT,		   /* expansion board#1 fast-ethernet interface#6 */
+	VISION_MNG_EXP1_FET7_PORT,		   /* expansion board#1 fast-ethernet interface#7 */
+	VISION_MNG_EXP1_FET8_PORT,		   /* expansion board#1 fast-ethernet interface#8 */
+	VISION_MNG_EXP1_COMBO1_PORT,		   /* expansion board#1 COMBO#1 GE interface */  
+	VISION_MNG_EXP1_COMBO2_PORT,		   /* expansion board#1 COMBO#2 GE interface */  
 
 
-	SMP_EXP2_BCKP_PORT,		   /* expansion board#2 backplane GE interface */    
-	SMP_EXP2_FET1_PORT,		   /* expansion board#2 fast-ethernet interface#1 */ 
-	SMP_EXP2_FET2_PORT,		   /* expansion board#2 fast-ethernet interface#2 */ 
-	SMP_EXP2_FET3_PORT,		   /* expansion board#2 fast-ethernet interface#3 */ 
-	SMP_EXP2_FET4_PORT,		   /* expansion board#2 fast-ethernet interface#4 */ 
-	SMP_EXP2_FET5_PORT,		   /* expansion board#2 fast-ethernet interface#5 */ 
-	SMP_EXP2_FET6_PORT,		   /* expansion board#2 fast-ethernet interface#6 */ 
-	SMP_EXP2_FET7_PORT,		   /* expansion board#2 fast-ethernet interface#7 */ 
-	SMP_EXP2_FET8_PORT,		   /* expansion board#2 fast-ethernet interface#8 */ 
-	SMP_EXP2_SFP1_PORT,		   /* expansion board#2 SFP#1 GE interface */        
-	SMP_EXP2_SFP2_PORT,		   /* expansion board#2 SFP#2 GE interface */        
+	VISION_MNG_EXP2_FET1_PORT,		   /* expansion board#2 fast-ethernet interface#1 */ 
+	VISION_MNG_EXP2_FET2_PORT,		   /* expansion board#2 fast-ethernet interface#2 */ 
+	VISION_MNG_EXP2_FET3_PORT,		   /* expansion board#2 fast-ethernet interface#3 */ 
+	VISION_MNG_EXP2_FET4_PORT,		   /* expansion board#2 fast-ethernet interface#4 */ 
+	VISION_MNG_EXP2_FET5_PORT,		   /* expansion board#2 fast-ethernet interface#5 */ 
+	VISION_MNG_EXP2_FET6_PORT,		   /* expansion board#2 fast-ethernet interface#6 */ 
+	VISION_MNG_EXP2_FET7_PORT,		   /* expansion board#2 fast-ethernet interface#7 */ 
+	VISION_MNG_EXP2_FET8_PORT,		   /* expansion board#2 fast-ethernet interface#8 */ 
+	VISION_MNG_EXP2_COMBO1_PORT,		   /* expansion board#2 COMBO#1 GE interface */  
+	VISION_MNG_EXP2_COMBO2_PORT,		   /* expansion board#2 COMBO#2 GE interface */  
 
 
-	SMP_EXP3_BCKP_PORT,		   /* expansion board#3 backplane GE interface */    
-	SMP_EXP3_FET1_PORT,		   /* expansion board#3 fast-ethernet interface#1 */ 
-	SMP_EXP3_FET2_PORT,		   /* expansion board#3 fast-ethernet interface#2 */ 
-	SMP_EXP3_FET3_PORT,		   /* expansion board#3 fast-ethernet interface#3 */ 
-	SMP_EXP3_FET4_PORT,		   /* expansion board#3 fast-ethernet interface#4 */ 
-	SMP_EXP3_FET5_PORT,		   /* expansion board#3 fast-ethernet interface#5 */ 
-	SMP_EXP3_FET6_PORT,		   /* expansion board#3 fast-ethernet interface#6 */ 
-	SMP_EXP3_FET7_PORT,		   /* expansion board#3 fast-ethernet interface#7 */ 
-	SMP_EXP3_FET8_PORT,		   /* expansion board#3 fast-ethernet interface#8 */ 
-	SMP_EXP3_SFP1_PORT,		   /* expansion board#3 SFP#1 GE interface */        
-	SMP_EXP3_SFP2_PORT,		   /* expansion board#3 SFP#2 GE interface */        
+	VISION_MNG_EXP3_FET1_PORT,		   /* expansion board#3 fast-ethernet interface#1 */ 
+	VISION_MNG_EXP3_FET2_PORT,		   /* expansion board#3 fast-ethernet interface#2 */ 
+	VISION_MNG_EXP3_FET3_PORT,		   /* expansion board#3 fast-ethernet interface#3 */ 
+	VISION_MNG_EXP3_FET4_PORT,		   /* expansion board#3 fast-ethernet interface#4 */ 
+	VISION_MNG_EXP3_FET5_PORT,		   /* expansion board#3 fast-ethernet interface#5 */ 
+	VISION_MNG_EXP3_FET6_PORT,		   /* expansion board#3 fast-ethernet interface#6 */ 
+	VISION_MNG_EXP3_FET7_PORT,		   /* expansion board#3 fast-ethernet interface#7 */ 
+	VISION_MNG_EXP3_FET8_PORT,		   /* expansion board#3 fast-ethernet interface#8 */ 
+	VISION_MNG_EXP3_COMBO1_PORT,		   /* expansion board#3 COMBO#1 GE interface */  
+	VISION_MNG_EXP3_COMBO2_PORT,		   /* expansion board#3 COMBO#2 GE interface */  
 };
 
 /* Auto-negotiation Port capabilities flags */
-#define	SMP_ANC_10BT       0x0001   /* 10BASE-T    half duplex mode */
-#define	SMP_ANC_10BTFD     0x0002   /* 10BASE-T    full duplex mode */
-#define	SMP_ANC_100BTX     0x0004   /* 100BASE-TX  half duplex mode */
-#define	SMP_ANC_100BTXFD   0x0008   /* 100BASE-TX  full duplex mode */
-#define	SMP_ANC_1000BT     0x0010   /* 1000BASE-T  half duplex mode */
-#define	SMP_ANC_1000BTFD   0x0020   /* 1000BASE-T  full duplex mode */
-#define	SMP_ANC_1000BX     0x0040   /* 1000BASE-X  half duplex mode */
-#define	SMP_ANC_1000BXFD   0x0080   /* 1000BASE-X  full duplex mode */
+#define	VISION_MNG_ANC_10BT       0x0001   /* 10BASE-T    half duplex mode */
+#define	VISION_MNG_ANC_10BTFD     0x0002   /* 10BASE-T    full duplex mode */
+#define	VISION_MNG_ANC_100BTX     0x0004   /* 100BASE-TX  half duplex mode */
+#define	VISION_MNG_ANC_100BTXFD   0x0008   /* 100BASE-TX  full duplex mode */
+#define	VISION_MNG_ANC_1000BT     0x0010   /* 1000BASE-T  half duplex mode */
+#define	VISION_MNG_ANC_1000BTFD   0x0020   /* 1000BASE-T  full duplex mode */
+#define	VISION_MNG_ANC_1000BX     0x0040   /* 1000BASE-X  half duplex mode */
+#define	VISION_MNG_ANC_1000BXFD   0x0080   /* 1000BASE-X  full duplex mode */
 
 /* Jack type enumeration */ 
-enum smp_jack_type {
-	SMP_RJ45,
-	SMP_RJ45S,
-	SMP_SC_FIBER,
-	SMP_LC_FIBER,
+enum vision_mng_jack_type {
+	VISION_MNG_RJ45,
+	VISION_MNG_RJ45S,
+	VISION_MNG_SC_FIBER,
+	VISION_MNG_LC_FIBER,
 };
 
 /* Power over Ethernet port status enumeration*/
-enum smp_port_poe_status {
-	SMP_POE_DISABLED,		   /* Power delivering is disabled */
-	SMP_POE_SIG_IN_PROC,	   /* Signature in process */
-	SMP_POE_CLASS_IN_PROC,	   /* Classification in process */
-	SMP_POE_DELIV_POWER,	   /* Power is delivering */
-	SMP_POE_FAULTY			   /* port is faulty */
+enum vision_mng_ethport_poe_status {
+	VISION_MNG_POE_DISABLED,		   /* Power delivering is disabled */
+	VISION_MNG_POE_SIG_IN_PROC,	   /* Signature in process */
+	VISION_MNG_POE_CLASS_IN_PROC,	   /* Classification in process */
+	VISION_MNG_POE_DELIV_POWER,	   /* Power is delivering */
+	VISION_MNG_POE_FAULTY			   /* port is faulty */
 };
 
 /* Power over Ethernet port Classification status enumeration */
-enum smp_poe_class_status {
-	SMP_POE_CLS_CLASS1,
-	SMP_POE_CLS_UNKNOWN,
-	SMP_POE_CLS_OVER_CURRENT
+enum vision_mng_poe_class_status {
+	VISION_MNG_POE_CLS_CLASS1,
+	VISION_MNG_POE_CLS_UNKNOWN,
+	VISION_MNG_POE_CLS_OVER_CURRENT
 };
 
 /* Power over Ethernet port Signature status enumeration */
-enum smp_poe_sig_status {
-	SMP_POE_SIG_IS_VALID,
-	SMP_POE_SIG_SHORT_CIRCUIT,
-	SMP_POE_SIG_HIGH_PD_INPUT_CAPACITANCE,
-	SMP_POE_SIG_LOW_RESISTANCE,
-	SMP_POE_SIG_HIGH_RESISTANCE,
-	SMP_POE_SIG_OPEN_CIRCUIT,
-	SMP_POE_SIG_HIGH_PORT_VOLT_OFFSET,
-	SMP_POE_SIG_UNKNOWN,
+enum vision_mng_poe_sig_status {
+	VISION_MNG_POE_SIG_IS_VALID,
+	VISION_MNG_POE_SIG_SHORT_CIRCUIT,
+	VISION_MNG_POE_SIG_HIGH_PD_INPUT_CAPACITANCE,
+	VISION_MNG_POE_SIG_LOW_RESISTANCE,
+	VISION_MNG_POE_SIG_HIGH_RESISTANCE,
+	VISION_MNG_POE_SIG_OPEN_CIRCUIT,
+	VISION_MNG_POE_SIG_HIGH_PORT_VOLT_OFFSET,
+	VISION_MNG_POE_SIG_UNKNOWN,
 };
 
 /* Expansion board access interface type enumeration*/
-enum smp_exp_ifc_type {
-	SMP_EXP_I2C,		/* GPIO lines are configerd as I2C */
-	SMP_EXP_SPI,		/* GPIO lines are configerd as SPI */
-	SMP_EXP_MDIO,		/* GPIO lines are configerd as MDIO */
-	SMP_EXP_GPIO,		/* GPIO lines are configerd as GPIO */
+enum vision_mng_exp_ifc_type {
+	VISION_MNG_EXP_I2C,		/* GPIO lines are configerd as I2C */
+	VISION_MNG_EXP_SPI,		/* GPIO lines are configerd as SPI */
+	VISION_MNG_EXP_MDIO,		/* GPIO lines are configerd as MDIO */
+	VISION_MNG_EXP_GPIO,		/* GPIO lines are configerd as GPIO */
 };
-
-
-/* Peripherial devices enumeration */
-enum smp_peripherals {
-	SMP_FTV,		 /* Fan, temperature and voltage controller */
-	SMP_SFP_1,		  /* Interface board SFP#1 */
-	SMP_SFP_2,		  /* Interface board SFP#2 */
-
-	SMP_SFP_3,		  /* Power over Ethernet board#1 SFP#1 */
-	SMP_SFP_4,		  /* Power over Ethernet board#1 SFP#2 */
-
-	SMP_SFP_5,		  /* Power over Ethernet board#2 SFP#1 */
-	SMP_SFP_6,		  /* Power over Ethernet board#2 SFP#2 */
-
-	SMP_SFP_7,		  /* Power over Ethernet board#3 SFP#1 */
-	SMP_SFP_8,		  /* Power over Ethernet board#3 SFP#2 */
-
-	SMP_PSE_1,		  /* Power over Ethernet board#1 PSE#1 device */
-	SMP_PSE_2,		  /* Power over Ethernet board#1 PSE#2 device */
-
-	SMP_PSE_3,		  /* Power over Ethernet board#2 PSE#1 device */
-	SMP_PSE_4,		  /* Power over Ethernet board#2 PSE#2 device */
-
-	SMP_PSE_5,		  /* Power over Ethernet board#3 PSE#1 device */
-	SMP_PSE_6,		  /* Power over Ethernet board#3 PSE#2 device */
-
-	/* Flexible hardware interface which can be 
-	   configured as I2C, SPI, MDIO or 
-	   four input/output GPIO lines */
-
-	SMP_EXP1_FLX,		 /* Expansion board#1 flexible interface */
-	SMP_EXP2_FLX,		 /* Expansion board#2 flexible interface */
-	SMP_EXP3_FLX,		 /* Expansion board#3 flexible interface */
-
-	SMP_MDIO_1,			 /* Chassis Ethernet switch */
-	SMP_MDIO_2,			 /* Power over Ethernet board#1 Ethernet switch */
-	SMP_MDIO_3,			 /* Power over Ethernet board#2 Ethernet switch */
-	SMP_MDIO_4,			 /* Power over Ethernet board#3 Ethernet switch */
-
-};
-
-
-/* GPIO lines bitmasks */
-#define SMP_GPIO_1  0x01
-#define SMP_GPIO_2  0x02
-#define SMP_GPIO_3  0x04
-#define SMP_GPIO_4  0x08
-
-/* GPIO mode enumeration */
-enum smp_gpio_mode {
-	SMP_GPIO_DISABLED,
-	SMP_GPIO_INPUT,
-	SMP_GPIO_OUT,
-};
-
 
 /* Serial Port (RS232) mapping structure */
-struct smp_serial_map {
+struct vision_mng_serial_map {
 	int ifc_board_fd;	  /* Specifies the file descriptor, for 
 							 example result of call to open("/dev/ttyUSB0"), 
 							 which shall be used for sending commands to 
@@ -352,7 +278,7 @@ struct smp_serial_map {
 };
 
 /* Chassis status structure */
-struct smp_chassis_status {
+struct vision_mng_shelf_status {
 	unsigned int  hw_revision;				  /* Represents VID field of EMC6D102 controller, installed on interface module */
 	unsigned int  fw_revision;				  /* Interface Board firmware version */
 
@@ -376,12 +302,12 @@ struct smp_chassis_status {
 	unsigned int expension_2;				  /*  expansion board#2 ID.  0xFF if board does not exist */
 	unsigned int expension_3;				  /*  expansion board#3 ID.  0xFF if board does not exist */
 
-	enum smp_bool sfp_1;					  /* SFP#1 exist. SMP_TRUE means exist. */
-	enum smp_bool sfp_2;					  /* SFP#2 exist. SMP_TRUE means exist. */
+	enum vision_mng_bool sfp_1;					  /* SFP#1 exist. VISION_MNG_TRUE means exist. */
+	enum vision_mng_bool sfp_2;					  /* SFP#2 exist. VISION_MNG_TRUE means exist. */
 };
 
 /* Chassis status structure */
-struct smp_chassis_alarm {
+struct vision_mng_shelf_alarm {
 	/* The alarm is set if the actual fan speed reading is above the threshold value */
 	unsigned int fan1;
 	unsigned int fan2;
@@ -410,7 +336,7 @@ struct smp_chassis_alarm {
 };
 
 /* FAN auto-control algorithm configuration */
-struct smp_fan_auto_ctr_cfg {
+struct vision_mng_fan_auto_ctr_cfg {
 	unsigned int low_limit_temp;		  /* minimum temperature that will turn the fans on */
 
 	unsigned int hysteresis_temp;		  /* hysteresis value for the minimum temperature\
@@ -422,7 +348,7 @@ struct smp_fan_auto_ctr_cfg {
 };
 
 /* Battery alarm threshold configuration */
-struct smp_battery_alarm_thresholds {
+struct vision_mng_battery_alarm_thresholds {
 	unsigned int threshold_33V;	/* value in percent. If the measured voltage is
 									   less than or greater than 3.3V by configured threshold,
 									   the appropriate alarm will be set */
@@ -438,7 +364,7 @@ struct smp_battery_alarm_thresholds {
 
 
 /* SFP vendor informanton */
-struct smp_sfp_vendor_info {
+struct vision_mng_sfp_vendor_info {
 	char vendor_name[16]; /* SFP transceiver vendor name (ASCII) */
 	char vendor_oui[3];	  /* SFP transceiver vendor IEEE company ID */
 	char vendor_pn[16];	  /* Part number provided by SFP transceiver vendor (ASCII) */
@@ -449,7 +375,7 @@ struct smp_sfp_vendor_info {
 };
 
 /* port statistics structure */
-struct smp_port_stats {
+struct vision_mng_ethport_stats {
 	unsigned int unicast_pkt_in;	   /* number of incoming unicast packets */
 	unsigned int unicast_pkt_out;	   /* number of outgoing unicast packets */
 	unsigned int multicast_pkt_in;	   /* number of incoming multicast packets */
@@ -464,10 +390,10 @@ struct smp_port_stats {
 
 
 /* Power over Ethernet alarm configuration structure */
-struct smp_poe_alarm_cfg {
-	enum smp_bool power_usage_alarm_enable;	 /* Enables or disables Power Usage alarm reporting.
-												SMP_FALSE disables alarm reporting,
-												SMP_TRUE  enables alarm reporting. */
+struct vision_mng_poe_alarm_cfg {
+	enum vision_mng_bool power_usage_alarm_enable;	 /* Enables or disables Power Usage alarm reporting.
+												VISION_MNG_FALSE disables alarm reporting,
+												VISION_MNG_TRUE  enables alarm reporting. */
 
 	unsigned int power_usage_threshold;	     /* The usage threshold expressed in percent for
 												comparing the measured power and initiating
@@ -477,349 +403,342 @@ struct smp_poe_alarm_cfg {
 };
 
 /* Power over Ethernet advanced information structure */
-struct smp_poe_info {
+struct vision_mng_poe_info {
 	unsigned int nominal_power;			    /* The nominal power of the PSE expressed in Watts */
 	unsigned int measured_power;		    /* Measured usage power expressed in Watts */
 	unsigned int measured_current;		    /* Measured current in uA */
 	unsigned int measured_voltage;		    /* Measured voltage in mV */
 
-	enum smp_poe_class_status class_status;	/* Classification status */
-	enum smp_poe_sig_status   sig_status;	/* Signature status */
+	enum vision_mng_poe_class_status class_status;	/* Classification status */
+	enum vision_mng_poe_sig_status   sig_status;	/* Signature status */
 };
 
 
 /* Power over Ethernet alarm structure */
-struct smp_poe_alarm {
+struct vision_mng_poe_alarm {
 	unsigned int power_usage_on;			/*  The usage  power is above the  Power Usage Threshold */
 	unsigned int power_usage_off;			/*  The usage  power is below the  Power Usage Threshold */
 };
 
 /* Detailed expansion board info structure */
-struct smp_card_info {
+struct vision_mng_card_info {
 	char card_name[16];						/* Expansion board card name ( ASCII ) */
 	char card_description[64];				/* Expansion board card description ( ASCII ) */
 
-	enum smp_bool need_48V;					/* Flag. EMP_TRUE if the board needs 48V supply */
+	enum vision_mng_bool need_48V;					/* Flag. EMP_TRUE if the board needs 48V supply */
 
-	enum smp_exp_ifc_type ifc_type;			/* Type of the expansion board access interface*/
+	enum vision_mng_exp_ifc_type ifc_type;			/* Type of the expansion board access interface*/
 };
-
-
-/* ##### */
-
-/*********************************************************************************************
-	PUBLIC SECTION: END
-*********************************************************************************************/
 
 
 /*******************************************************************************************
 	EXPORT SECTION: BEGIN
 *******************************************************************************************/
 
-/* ##### Global Variables ##### */
-/* ##### */
-
 
 /* ##### Function Prototypes ##### */
 /*********************************************************************************************
-Syntax:				int smp_init(struct smp_serial_map* serial_map_ptr)
+Syntax:				int vision_mng_init(struct vision_mng_serial_map* serial_map_ptr)
 
 Remarks:			This function initializes shelf management package
 
-						Parameter		 							Description
-						--------------------------------------------------------------------------------
-						serial_map_ptr								Specifies the pointer to smp_serial_map
-																	structure containes the file descriptors
-																	for the sending commands to the interface
-																	module and to the expansion boards.
+						Parameter		  		Description
+						----------------------------------------------------------------------
+						serial_map_ptr	  	Specifies the pointer to vision_mng_serial_map
+										  	structure containes the file descriptors
+										  	for the sending commands to the interface
+										  	module and to the expansion boards.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-						Value		 									Description
-						--------------------------------------------------------------------------------
-						= SMP_STATUS_OK									No Errors		(Success)
-						< 0												Error Code 		(Failure)
-																			SMP_STATUS_INV_ARG
-																			SMP_STATUS_RESET
-																			SMP_STATUS_TIMEOUT
-																			SMP_STATUS_NO_CRD_RESPONSE
-																			SMP_STATUS_NO_DEV_RESPONSE
+						Value		 	  			Description
+						----------------------------------------------------------------------
+						= VISION_MNG_STATUS_OK		No Errors		(Success)
+						< 0					  		Error Code 		(Failure)
+											  			VISION_MNG_STATUS_INV_ARG
+														VISION_MNG_STATUS_RESET
+														VISION_MNG_STATUS_TIMEOUT
+														VISION_MNG_STATUS_NO_CRD_RESPONSE
+														VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_init(struct smp_serial_map* serial_map_ptr);
+extern int vision_mng_init(struct vision_mng_serial_map* serial_map_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_chassis_status_get(struct smp_chassis_status * chassis_status_ptr)
+Syntax:				int vision_mng_shelf_status_get(struct vision_mng_shelf_status * shelf_status_ptr)
 
-Remarks:			This function retrieves the actual chassis status.
+Remarks:			This function retrieves the actual shelf status.
 
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							chassis_status_ptr							 Specifies the pointer to the smp_chassis_status
-																		 structure. The actual chassis status will be stored
-																		 in memory pointed by the argument.
+							Parameter	  				Description
+							------------------------------------------------------------------
+							shelf_status_ptr	 Specifies the pointer to the vision_mng_shelf_status
+												 structure. The actual shelf status will be stored
+												 in memory pointed by the argument.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 		 		Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0					  		Error Code 		(Failure)
+												  		  VISION_MNG_STATUS_INV_ARG
+												  		  VISION_MNG_STATUS_RESET
+												  		  VISION_MNG_STATUS_TIMEOUT
+												  		  VISION_MNG_STATUS_NO_CRD_RESPONSE
+												  		  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_chassis_status_get(struct smp_chassis_status * chassis_status_ptr);
-
-
-/*********************************************************************************************
-Syntax:				int smp_chassis_alarms_get(struct smp_chassis_alarm * chassis_alarm_ptr)
-
-Remarks:			This function retrieves the actual chassis alarms.
-
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							chassis_alarm_ptr							 Specifies the pointer to the smp_chassis_alarm
-																		 structure. The actual alarms will be stored
-																		 in memory pointed by the argument.
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
-*********************************************************************************************/
-extern int smp_chassis_alarms_get(struct smp_chassis_alarm * chassis_alarm_ptr);
+extern int vision_mng_shelf_status_get(struct vision_mng_shelf_status * shelf_status_ptr);
 
 
 /*********************************************************************************************
-Syntax:				int smp_48v_cfg_set(enum smp_slot slot, enum smp_48v_action action)
+Syntax:				int vision_mng_shelf_alarms_get(struct vision_mng_shelf_alarm * shelf_alarm_ptr)
+
+Remarks:			This function retrieves the actual shelf alarms.
+
+							Parameter		 			Description
+							------------------------------------------------------------------
+							shelf_alarm_ptr		Specifies the pointer to the vision_mng_shelf_alarm
+												structure. The actual alarms will be stored
+												in memory pointed by the argument.
+
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
+
+							Value		 				Description
+							------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK	    No Errors		(Success)
+							< 0					  	    Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
+*********************************************************************************************/
+extern int vision_mng_shelf_alarms_get(struct vision_mng_shelf_alarm * shelf_alarm_ptr);
+
+
+/*********************************************************************************************
+Syntax:				int vision_mng_exp_48v_cfg_set(enum vision_mng_slot slot, enum vision_mng_48v_action action)
 
 Remarks:			This function powers 48V ON or OFF for the expansion boards.
 
-							Parameter		 							Description
+							Parameter		  		Description
+							------------------------------------------------------------------
+							slot		      Slot number. VISION_MNG_SLOT_1, VISION_MNG_SLOT_2
+											  or VISION_MNG_SLOT_3.
+
+							action		      VISION_MNG_48V_ON or VISION_MNG_48V_OFF.
+
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
+
+							Value		 	  				Description
 							--------------------------------------------------------------------------------
-							slot		            					 Slot number. SMP_SLOT_1, SMP_SLOT_2
-																		 or SMP_SLOT_3.
-
-							action		            					 SMP_48V_ON or SMP_48V_OFF.
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0					  		Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_48v_on_off(enum smp_slot slot, enum smp_48v_action action);
+extern int vision_mng_exp_48v_on_off(enum vision_mng_slot slot, enum vision_mng_48v_action action);
 
 /*********************************************************************************************
-Syntax:				int smp_fan_auto_control_set(enum smp_bool enable, struct smp_fan_auto_ctr_cfg * cfg_ptr)
+Syntax:				int vision_mng_fan_auto_control_set(enum vision_mng_bool enable, 
+                                                struct vision_mng_fan_auto_ctr_cfg * cfg_ptr)
 
 Remarks:			This function enables or disables FAN auto-control mode. 
 					The mode is enabled by default. All thresholds and limits used by
 					the algorithm will be configured to defaults during the Firmware startup.
 
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							enable		            					 SMP_TRUE to enable the mode. 
-																		 SMP_FALSE to disable the mode.
-																		 If the mode is disabled the next argument
-																		 will be ignored.
+							Parameter		 		Description
+							------------------------------------------------------------------
+							enable		        VISION_MNG_TRUE to enable the mode. 
+												VISION_MNG_FALSE to disable the mode.
+												If the mode is disabled the next argument
+												will be ignored.
 
-							cfg_ptr                                      Specifies the pointer to the smp_fan_auto_ctr_cfg
-																		 structure contains the limits values which will used
-																		 by the auto-control algorithm.
-																		 If the argument is NULL, default values will be used.
+							cfg_ptr             Specifies the pointer to the vision_mng_fan_auto_ctr_cfg
+												structure contains the limits values which will used
+												by the auto-control algorithm.
+												If the argument is NULL, default values will be used.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				 Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_fan_auto_control_set(enum smp_bool enable, struct smp_fan_auto_ctr_cfg * cfg_ptr);
+extern int vision_mng_fan_auto_control_set(enum vision_mng_bool enable, struct vision_mng_fan_auto_ctr_cfg * cfg_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_fan_auto_control_get(enum smp_bool* enable_ptr, struct smp_fan_auto_ctr_cfg* cfg_ptr)
+Syntax:				int vision_mng_fan_auto_control_get(enum vision_mng_bool* enable_ptr, 
+                                                 struct vision_mng_fan_auto_ctr_cfg* cfg_ptr)
 
 Remarks:			This function retrieves fans auto-control mode configuration. If the mode is 
 					disabled, the second argument will be ignored.
 
-							Parameter		 							Description
+							Parameter		 		  	Description
 							--------------------------------------------------------------------------------
-							enable_ptr		            				Specifies the pointer to the buffer
-																		where the enable status will be stored.
-																		   SMP_TRUE if the mode is enabled
-																		   SMP_FALSE if the mode is disabled
-																		 If the mode is disabled the next argument
-																		 will be ignored.
+							enable_ptr		   Specifies the pointer to the buffer
+											   where the enable status will be stored.
+											   VISION_MNG_TRUE if the mode is enabled
+											   VISION_MNG_FALSE if the mode is disabled
+											   If the mode is disabled the next argument
+											   will be ignored.
 
-							cfg_ptr                                      Specifies the pointer to the smp_fan_auto_ctr_cfg
-																		 structure where the limits values will be stored.
+							cfg_ptr            Specifies the pointer to the vision_mng_fan_auto_ctr_cfg
+											   structure where the limits values will be stored.
 																		 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
+							Value		 					Description
 							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_fan_auto_control_get(enum smp_bool* enable_ptr, struct smp_fan_auto_ctr_cfg* cfg_ptr);
+extern int vision_mng_fan_auto_control_get(enum vision_mng_bool* enable_ptr, struct vision_mng_fan_auto_ctr_cfg* cfg_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_fan_speed_set(enum smp_fans fan, unsigned int speed)
+Syntax:				int vision_mng_fan_speed_set(enum vision_mng_fans fan, unsigned int speed)
 
 Remarks:			This function sets speed to the specific FAN.
 					If cooling system is in auto-control mode, the API will ignored. 
 
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							fan		            					    Specifies the target FAN: 
-																		SMP_FAN_1 or SMP_FAN_2
+							Parameter		 		 Description
+							-------------------------------------------------------------------
+							fan		       Specifies the target FAN: 
+										   VISION_MNG_FAN_1 or VISION_MNG_FAN_2
 
 
-							speed               					    Specifies the speed in RPM
+							speed          Specifies the speed in RPM
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				 	Description
+							--------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK  	No Errors		(Success)
+							< 0					    	Error Code 		(Failure)
+												    	  VISION_MNG_STATUS_INV_ARG
+												    	  VISION_MNG_STATUS_RESET
+												    	  VISION_MNG_STATUS_TIMEOUT
+												    	  VISION_MNG_STATUS_NO_CRD_RESPONSE
+												    	  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_fan_speed_set(enum smp_fans fan, unsigned int speed);
+extern int vision_mng_fan_speed_set(enum vision_mng_fans fan, unsigned int speed);
 
 /*********************************************************************************************
-Syntax:				int smp_fan_alarm_threshold_set(enum smp_fans fan, unsigned int threshold)
+Syntax:				int vision_mng_fan_alarm_threshold_set(enum vision_mng_fans fan, 
+                                                           unsigned int threshold)
 
 Remarks:			This function sets speed alarm threshold for both of FANs. If fan speed
 					is less than configured value, alarm will be raised   
 
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							threshold             					    Specifies the minimum value of fan speed
-																		in RPM.
+							Parameter		 			   Description
+							-------------------------------------------------------------------
+							threshold             Specifies the minimum value of fan speed
+												  in RPM.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 		  			Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK 		No Errors		(Success)
+							< 0					   		Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_fan_alarm_threshold_set(unsigned int threshold);
+extern int vision_mng_fan_alarm_threshold_set(unsigned int threshold);
 
 /*********************************************************************************************
-Syntax:				int smp_fan_alarm_threshold_get(unsigned int *threshold)
+Syntax:				int vision_mng_fan_alarm_threshold_get(unsigned int *threshold)
 
 Remarks:			This function retrieves speed alarm threshold for both of FANs.   
 
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							threshold_ptr          					    Specifies the pointer where the 
-																		threshold will be stored.
+							Parameter		 				Description
+							------------------------------------------------------------------
+							threshold_ptr          	Specifies the pointer where the 
+													threshold will be stored.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 			         Description
+							-----------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_fan_alarm_threshold_get(unsigned int *threshold_ptr);
+extern int vision_mng_fan_alarm_threshold_get(unsigned int *threshold_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_battery_alarm_thresholds_set(struct smp_battery_alarm_thresholds *thresholds_ptr)
+Syntax:				int vision_mng_battery_alarm_thresholds_set(struct vision_mng_battery_alarm_thresholds *thresholds_ptr)
 
 Remarks:			This function sets threshold for battery alarm system in percent. If the measured
 					voltage is less than or greater than by configured threshold, the appropriate
 					alarm will be set.
 					
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							thresholds_ptr         					    Specifies the pointer to the smp_fan_auto_ctr_cfg
-																		structure contains the threshold values to set.
-																		If the argument is NULL, default values will be used.
+							Parameter					Description
+							------------------------------------------------------------------
+							thresholds_ptr    Specifies the pointer to the vision_mng_fan_auto_ctr_cfg
+											  structure contains the threshold values to set.
+											  If the argument is NULL, default values will be used.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 			  	Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_battery_alarm_thresholds_set(struct smp_battery_alarm_thresholds *thresholds_ptr);
+extern int vision_mng_battery_alarm_thresholds_set(struct vision_mng_battery_alarm_thresholds *thresholds_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_battery_alarm_thresholds_get(struct smp_battery_alarm_thresholds *thresholds_ptr)
+Syntax:				int vision_mng_battery_alarm_thresholds_get(struct vision_mng_battery_alarm_thresholds *thresholds_ptr)
 
 Remarks:			This function retrieves the thresholds for battery alarm system.
 					
-							Parameter		 							Description
+							Parameter		 	   		Description
 							--------------------------------------------------------------------------------
-							thresholds_ptr         					    Specifies the pointer to the smp_fan_auto_ctr_cfg
-																		structure where the threshold values will be stored.
+							thresholds_ptr         Specifies the pointer to the vision_mng_fan_auto_ctr_cfg
+												   structure where the threshold values will be stored.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
+							Value		 		   		Description
 							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							= VISION_MNG_STATUS_OK 		No Errors		(Success)
+							< 0					   		Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_battery_alarm_thresholds_get(struct smp_battery_alarm_thresholds *thresholds_ptr);
+extern int vision_mng_battery_alarm_thresholds_get(struct vision_mng_battery_alarm_thresholds *thresholds_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_card_inventory(unsigned int card_i, struct smp_card_info *info_ptr)
+Syntax:				int vision_mng_card_inventory(unsigned int card_i, struct vision_mng_card_info *info_ptr)
 
 Remarks:			This function retrieves the detailed information about expansion board 
 					according to its ID.
@@ -828,279 +747,255 @@ Remarks:			This function retrieves the detailed information about expansion boar
 							----------------------------------------------------------------
 							card_id		    Specifies expansion card id
 							
-							info_ptr        Specifies pointer to smp_card_info structure 
+							info_ptr        Specifies pointer to vision_mng_card_info structure 
 											where the info will be stored.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
 							Value		 	  			Description
 							-----------------------------------------------------------------
-							= SMP_STATUS_OK	  	No Errors		(Success)
+							= VISION_MNG_STATUS_OK	  	No Errors		(Success)
 							< 0				  	Error Code 		(Failure)
-												  SMP_STATUS_INV_ARG
-												  SMP_STATUS_RESET
-												  SMP_STATUS_TIMEOUT
-												  SMP_STATUS_NO_CRD_RESPONSE
-												  SMP_STATUS_NO_DEV_RESPONSE
+												  VISION_MNG_STATUS_INV_ARG
+												  VISION_MNG_STATUS_RESET
+												  VISION_MNG_STATUS_TIMEOUT
+												  VISION_MNG_STATUS_NO_CRD_RESPONSE
+												  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_card_inventory(unsigned int card_id, struct smp_card_info *info_ptr);
+extern int vision_mng_card_inventory(unsigned int card_id, struct vision_mng_card_info *info_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_enable(unsigned int port_mask, enum smp_bool enable)
+Syntax:				int vision_mng_ethport_enable(enum vision_mng_port port, enum vision_mng_bool enable)
 
-Remarks:			This function enables or disables specified chassis Ethernet port.
+Remarks:			This function enables or disables specified shelf Ethernet port.
 					
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port_mask      					        Specifies Ethernet port or set of ports
-																	to which the configuration will be applied.
-																	The list of port is defined in smp_port enumeration.
-																	Application can use SMP_PORT_BIT macro to place the
-																	appropriate bit to the corresponding place.
-																	Each port is a one single bit in the mask.
-																	Application can combine the bits to apply the 
-																	configuration to a group of ports.
+							Parameter		   	Description
+							------------------------------------------------------------------
+							port           Specifies Ethernet port to which the configuration 
+							               will be applied.
 																	
-							enable								    SMP_TRUE to enable the port.
-																	SMP_FALSE to disable the port.							                                        
+							enable	       VISION_MNG_TRUE to enable the port.
+								  		   VISION_MNG_FALSE to disable the port.							                                        
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		   				Description
+							------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_enable(unsigned int port_mask, enum smp_bool enable);
+extern int vision_mng_ethport_enable(enum vision_mng_port port, enum vision_mng_bool enable);
 
 
 /*********************************************************************************************
-Syntax:				 int smp_port_status(unsigned int port_mask, enum smp_port_status *status_ptr)
+Syntax:				 int vision_mng_ethport_status(enum vision_mng_port port, 
+                                                   enum vision_mng_port_status *status_ptr)
 
-Remarks:			This function retrieves specified chassis Ethernet port status.
+Remarks:			This function retrieves specified shelf Ethernet port status.
 					
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port        					        Specifies a single Ethernet port.
+							Parameter		 				Description
+							------------------------------------------------------------------
+							port            Specifies a single Ethernet port.
 																	
-							status_ptr							    Specifies pointer to buffer
-																	where the status will be stored.
+							status_ptr	    Specifies pointer to buffer
+											where the status will be stored.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 					Description
+							------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK				No Errors		(Success)
+							< 0									Error Code 		(Failure)
+																  VISION_MNG_STATUS_INV_ARG
+																  VISION_MNG_STATUS_RESET
+																  VISION_MNG_STATUS_TIMEOUT
+																  VISION_MNG_STATUS_NO_CRD_RESPONSE
+																  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_status(enum smp_port port, enum smp_port_status *status_ptr);
+extern int vision_mng_ethport_status(enum vision_mng_port port, enum vision_mng_port_status *status_ptr);
 
 
 /*********************************************************************************************
-Syntax:				int smp_port_speed_set(unsigned int port_mask, enum smp_eth_speed speed)
+Syntax:				int vision_mng_ethport_speed_set(enum vision_mng_port port, 
+                                                     enum vision_mng_eth_speed speed)
 
-Remarks:			This function sets speed for the specified chassis Ethernet port.
+Remarks:			This function sets speed for the specified shelf Ethernet port.
 					If the port is in auto-negotiation mode the command will be ignored.
 					
 							Parameter		 							Description
 							--------------------------------------------------------------------------------
-							port_mask      					        Specifies Ethernet port or set of ports
-																	to which the configuration will be applied.
-																	The list of port is defined in smp_port enumeration.
-																	Application can use SMP_PORT_BIT macro to place the
-																	appropriate bit to the corresponding place.
-																	Each port is a one single bit in the mask.
-																	Application can combine the bits to apply the 
-																	configuration to a group of ports.
+							port           Specifies Ethernet port to which the configuration 
+							               will be applied.
 																	
-							speed								    Specifies selected speed.							                                        
+							speed		   Specifies selected speed.							                                        
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
 							Value		 									Description
 							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
+							= VISION_MNG_STATUS_OK									No Errors		(Success)
 							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+																			  VISION_MNG_STATUS_INV_ARG
+																			  VISION_MNG_STATUS_RESET
+																			  VISION_MNG_STATUS_TIMEOUT
+																			  VISION_MNG_STATUS_NO_CRD_RESPONSE
+																			  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_speed_set(unsigned int port_mask, enum smp_eth_speed speed);
+extern int vision_mng_ethport_speed_set(enum vision_mng_port port, enum vision_mng_eth_speed speed);
 
 /*********************************************************************************************
-Syntax:				int smp_port_speed_get(enum smp_port port, enum smp_eth_speed *speed_ptr)
+Syntax:				int vision_mng_ethport_speed_get(enum vision_mng_port port, 
+                                                     enum vision_mng_eth_speed *speed_ptr)
 
-Remarks:			This function retrieves speed of the specified chassis Ethernet port.
+Remarks:			This function retrieves speed of the specified shelf Ethernet port.
 					
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port        					        Specifies a single Ethernet port.
+							Parameter		 		 	Description
+							------------------------------------------------------------------
+							port              Specifies a single Ethernet port.
 																	
-							speed_ptr							    Specifies pointer to the buffer where the
-																	speed will be stored.
+							speed_ptr 		  Specifies pointer to the buffer where the
+											  speed will be stored.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
+							Value		 				Description
 							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_speed_get(enum smp_port port, enum smp_eth_speed *speed_ptr);
+extern int vision_mng_ethport_speed_get(enum vision_mng_port port, enum vision_mng_eth_speed *speed_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_autoneg_enable(unsigned int port_mask, enum smp_bool enable)
+Syntax:				int vision_mng_ethport_autoneg_enable(enum vision_mng_port port, 
+                                                          enum vision_mng_bool enable)
 
 Remarks:			This function enables or disables auto-negotiation mechanism.
 					
 							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port_mask      					        Specifies Ethernet port or set of ports
-																	to which the configuration will be applied.
-																	The list of port is defined in smp_port enumeration.
-																	Application can use SMP_PORT_BIT macro to place the
-																	appropriate bit to the corresponding place.
-																	Each port is a one single bit in the mask.
-																	Application can combine the bits to apply the 
-																	configuration to a group of ports.
+							------------------------------------------------------------------
+							port           Specifies Ethernet port to which the configuration 
+							               will be applied.
 																	
-							enable								    SMP_TRUE enables auto-negotiation.
-																	SMP_FALSE disables auto-negotiation
+							enable			VISION_MNG_TRUE enables auto-negotiation.
+											VISION_MNG_FALSE disables auto-negotiation
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				  Description
+							------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		  No Errors		(Success)
+							< 0							  Error Code 		(Failure)
+														  	  VISION_MNG_STATUS_INV_ARG
+														  	  VISION_MNG_STATUS_RESET
+														  	  VISION_MNG_STATUS_TIMEOUT
+														  	  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  	  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_autoneg_enable(unsigned int port_mask, enum smp_bool enable);
+extern int vision_mng_ethport_autoneg_enable(enum vision_mng_port port, enum vision_mng_bool enable);
 
 /*********************************************************************************************
-Syntax:				int smp_port_autoneg_restart(unsigned int port_mask)
+Syntax:				int vision_mng_ethport_autoneg_restart(enum vision_mng_port port)
 
 Remarks:			This function forces auto-negotiation to begin link renegotiation.
 					If auto-negotiation is disabled, the API has no effect
 					
 							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port_mask      					        Specifies Ethernet port or set of ports
-																	to which the configuration will be applied.
-																	The list of port is defined in smp_port enumeration.
-																	Application can use SMP_PORT_BIT macro to place the
-																	appropriate bit to the corresponding place.
-																	Each port is a one single bit in the mask.
-																	Application can combine the bits to apply the 
-																	configuration to a group of ports.
+							------------------------------------------------------------------
+							port           Specifies Ethernet port to which the configuration 
+							               will be applied.
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 					Description
+							------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_autoneg_restart(unsigned int port_mask);
+extern int vision_mng_ethport_autoneg_restart(enum vision_mng_port port);
 
 /*********************************************************************************************
-Syntax:				int smp_port_autoneg_status(enum smp_port port, enum smp_autoneg_status *status_ptr)
+Syntax:				int vision_mng_ethport_autoneg_status(enum vision_mng_port port, 
+                                                  enum vision_mng_autoneg_status *status_ptr)
 
 Remarks:			This function forces auto-negotiation to begin link renegotiation.
 					If auto-negotiation is disabled, the API has no effect
 					
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port        					        Specifies a single Ethernet port.
+							Parameter		 	  	Description
+							-----------------------------------------------------------------
+							port        		  Specifies a single Ethernet port.
 							
-							status_ptr                              Specifies pointer to buffer where the 
-																	status  will be stored.
+							status_ptr            Specifies pointer to buffer where the 
+												  status  will be stored.
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_autoneg_status(enum smp_port port, enum smp_autoneg_status *status_ptr);
+extern int vision_mng_ethport_autoneg_status(enum vision_mng_port port, enum vision_mng_autoneg_status *status_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_autoneg_capabilities_set(unsigned int port_mask, unsigned int capabilities_mask)
+Syntax:				int vision_mng_ethport_autoneg_capabilities_set(enum vision_mng_port port,
+                                                              unsigned int capabilities_mask)
 
 Remarks:			This function configures the set of capabilities of the local auto-negotiation
 					entity.
 										
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port_mask      					        Specifies Ethernet port or set of ports
-																	to which the configuration will be applied.
-																	The list of port is defined in smp_port enumeration.
-																	Application can use SMP_PORT_BIT macro to place the
-																	appropriate bit to the corresponding place.
-																	Each port is a one single bit in the mask.
-																	Application can combine the bits to apply the 
-																	configuration to a group of ports.
+							Parameter		 		 	Description
+							-------------------------------------------------------------------
+							port                    Specifies Ethernet port to which the configuration 
+							                         will be applied.
 							
-							capabilities_mask                       Specifies bit mask of local capabilities:							
-																			SMP_ANC_10BT    
-																			SMP_ANC_10BTFD  
-																			SMP_ANC_100BTX  
-																			SMP_ANC_100BTXFD
-																			SMP_ANC_1000BT  
-																			SMP_ANC_1000BTFD
-																			SMP_ANC_1000BX  
-																			SMP_ANC_1000BXFD
+							capabilities_mask       Specifies bit mask of local capabilities:							
+														VISION_MNG_ANC_10BT    
+														VISION_MNG_ANC_10BTFD  
+														VISION_MNG_ANC_100BTX  
+														VISION_MNG_ANC_100BTXFD
+														VISION_MNG_ANC_1000BT  
+														VISION_MNG_ANC_1000BTFD
+														VISION_MNG_ANC_1000BX  
+														VISION_MNG_ANC_1000BXFD
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_autoneg_capabilities_set(unsigned int port_mask, unsigned int capabilities_mask);
+extern int vision_mng_ethport_autoneg_capabilities_set(enum vision_mng_port port, unsigned int capabilities_mask);
 
 /*********************************************************************************************
-Syntax:				int smp_port_autoneg_capabilities_get(enum smp_port port, 
+Syntax:				int vision_mng_ethport_autoneg_capabilities_get(enum vision_mng_port port, 
                                                           unsigned int *capabilities_mask_prt,
-														  enum smp_bool remote)
+														  enum vision_mng_bool remote)
 
 Remarks:			This function retrieves the set of capabilities of the local or remote
 					auto-negotiation entity.
@@ -1112,285 +1007,280 @@ Remarks:			This function retrieves the set of capabilities of the local or remot
 							capabilities_mask_ptr       Specifies a pointer to the buffer were the
 														bit mask of local capabilities will be stored.
 																	
-							remote        				Specifies a flag. If SMP_TRUE, the API retrieves
+							remote        				Specifies a flag. If VISION_MNG_TRUE, the API retrieves
 														the capabilities supported by remote entity.
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
 							Value		 						Description
 							---------------------------------------------------------------------
-							= SMP_STATUS_OK				No Errors		(Success)
+							= VISION_MNG_STATUS_OK				No Errors		(Success)
 							< 0							Error Code 		(Failure)
-														  SMP_STATUS_INV_ARG
-														  SMP_STATUS_RESET
-														  SMP_STATUS_TIMEOUT
-														  SMP_STATUS_NO_CRD_RESPONSE
-														  SMP_STATUS_NO_DEV_RESPONSE
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_autoneg_capabilities_get(enum smp_port port, 
+extern int vision_mng_ethport_autoneg_capabilities_get(enum vision_mng_port port, 
 											 unsigned int *capabilities_mask_prt,
-											 enum smp_bool remote);
+											 enum vision_mng_bool remote);
 
 /*********************************************************************************************
-Syntax:				int smp_port_sfp_manufacture_info(enum smp_port port, struct smp_sfp_vendor_info *info_ptr)
+Syntax:				int vision_mng_ethport_sfp_manufacture_info(enum vision_mng_port port, 
+                                                  struct vision_mng_sfp_vendor_info *info_ptr)
 
 Remarks:			This function retrieves the set of capabilities of the local or remote
 					auto-negotiation entity.
 										
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port        					        Specifies a single Ethernet port.
+							Parameter		 		Description
+							------------------------------------------------------------------
+							port        	Specifies a single Ethernet port.
 							
-							info_ptr                                Specifies a pointer to the smp_sfp_vendor_info
-																	where the info will be stored.
+							info_ptr        Specifies a pointer to the vision_mng_sfp_vendor_info
+											where the info will be stored.
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_sfp_manufacture_info(enum smp_port port, struct smp_sfp_vendor_info *info_ptr);
+extern int vision_mng_ethport_sfp_manufacture_info(enum vision_mng_port port, struct vision_mng_sfp_vendor_info *info_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_jack_type(enum smp_port port, enum smp_jack_type *jack_type_ptr)
+Syntax:				int vision_mng_ethport_jack_type(enum vision_mng_port port, 
+                                                     enum vision_mng_jack_type *jack_type_ptr)
 
 Remarks:			This function retrieves the type of the jack attached to the interface.
 					
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port        					        Specifies a single Ethernet port.
+							Parameter		 		 	Description
+							------------------------------------------------------------------
+							port        			Specifies a single Ethernet port.
 																	
-							jack_type_ptr						    Specifies pointer to buffer
-																	where the jack type will be stored.
+							jack_type_ptr			Specifies pointer to buffer
+													where the jack type will be stored.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_jack_type(enum smp_port port, enum smp_jack_type *jack_type_ptr);
+extern int vision_mng_ethport_jack_type(enum vision_mng_port port, enum vision_mng_jack_type *jack_type_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_chs_eth_port_statistics(enum smp_port port, struct smp_port_stats *stats_ptr)
+Syntax:				int vision_mng_chs_eth_port_statistics(enum vision_mng_port port, 
+                                                    struct vision_mng_ethport_stats *stats_ptr)
 
-Remarks:			This function retrieves specified chassis Ethernet port statistics.
+Remarks:			This function retrieves specified shelf Ethernet port statistics.
 					
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port         					        Specifies a single Ethernet port.
+							Parameter		 		Description
+							------------------------------------------------------------------
+							port         		Specifies a single Ethernet port.
 																	
-							stats_ptr							    Specifies pointer to smp_port_stats
-																	structure where the status will be stored.
+							stats_ptr			Specifies pointer to vision_mng_ethport_stats
+												structure where the status will be stored.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_statistics(enum smp_port port, struct smp_port_stats *stats_ptr);
+extern int vision_mng_ethport_statistics(enum vision_mng_port port, struct vision_mng_ethport_stats *stats_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_poe_enable(unsigned int port_mask, enum smp_bool remote)
+Syntax:				int vision_mng_ethport_poe_enable(enum vision_mng_port port, 
+                                                      enum vision_mng_bool remote)
 
 Remarks:			This function enables or disables Power over Ethernet capabilities
 					for the specified Ethernet port or group of ports.
 										
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port_mask      					        Specifies Ethernet port or set of ports
-																	to which the configuration will be applied.
-																	The list of port is defined in smp_port enumeration.
-																	Application can use SMP_PORT_BIT macro to place the
-																	appropriate bit to the corresponding place.
-																	Each port is a one single bit in the mask.
-																	Application can combine the bits to apply the 
-																	configuration to a group of ports.
+							Parameter		 		  Description
+							------------------------------------------------------------------
+							port           Specifies Ethernet port to which the configuration 
+							               will be applied.
 							
-							enable                                  SMP_TRUE enables the capability.
-																	SMP_FALSE disables the capability
+							enable      VISION_MNG_TRUE enables the capability.
+								  		VISION_MNG_FALSE disables the capability
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_poe_enable(unsigned int port_mask, enum smp_bool enable);
+extern int vision_mng_ethport_poe_enable(enum vision_mng_port port, enum vision_mng_bool enable);
 
 /*********************************************************************************************
-Syntax:				int smp_port_poe_status(enum smp_port port, enum smp_port_poe_status *status_ptr)
+Syntax:				int vision_mng_ethport_poe_status(enum vision_mng_port port, 
+                                             enum vision_mng_ethport_poe_status *status_ptr)
 
 Remarks:			This function retrieves Power over Ethernet status
 					for the specified Ethernet port.
 										
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port         					        Specifies a single Ethernet port.
+							Parameter		 			Description
+							------------------------------------------------------------------
+							port         	 Specifies a single Ethernet port.
 																	
-							stats_ptr							    Specifies pointer to the buffer
-																	where the status will be stored.
+							stats_ptr		 Specifies pointer to the buffer
+											 where the status will be stored.
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_poe_status(enum smp_port port, enum smp_port_poe_status *status_ptr);
+extern int vision_mng_ethport_poe_status(enum vision_mng_port port, enum vision_mng_ethport_poe_status *status_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_poe_alarm_cfg_set(unsigned int port_mask, struct smp_poe_alarm_cfg *cfg_ptr)
+Syntax:				int vision_mng_ethport_poe_alarm_cfg_set(enum vision_mng_port port, 
+                                                    struct vision_mng_poe_alarm_cfg *cfg_ptr)
 
 Remarks:			This function configures Power over Ethernet alarm conditions
 					for the specified Ethernet port or group of ports.
 										
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port_mask      					        Specifies Ethernet port or set of ports
-																	to which the configuration will be applied.
-																	The list of port is defined in smp_port enumeration.
-																	Application can use SMP_PORT_BIT macro to place the
-																	appropriate bit to the corresponding place.
-																	Each port is a one single bit in the mask.
-																	Application can combine the bits to apply the 
-																	configuration to a group of ports.
+							Parameter	   			Description
+							-----------------------------------------------------------------
+							port           Specifies Ethernet port to which the configuration 
+							               will be applied.
 							
-							cfg_ptr                                 Specifies a pointer to the smp_poe_alarm_cfg
-																	structure, contains the configuration to set
+							cfg_ptr        Specifies a pointer to the vision_mng_poe_alarm_cfg
+										   structure, contains the configuration to set
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_poe_alarm_cfg_set(unsigned int port_mask, struct smp_poe_alarm_cfg *cfg_ptr);
+extern int vision_mng_ethport_poe_alarm_cfg_set(enum vision_mng_port port, struct vision_mng_poe_alarm_cfg *cfg_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_poe_alarm_cfg_get(enum smp_port port, struct smp_poe_alarm_cfg *cfg_ptr);
+Syntax:				int vision_mng_ethport_poe_alarm_cfg_get(enum vision_mng_port port, 
+                                                     struct vision_mng_poe_alarm_cfg *cfg_ptr);
 
 Remarks:			This function retrieves Power over Ethernet alarm configuration
 					for the specified Ethernet port.
 										
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port         					        Specifies a single Ethernet port.
+							Parameter		 		 Description
+							-----------------------------------------------------------------
+							port         	Specifies a single Ethernet port.
 																	
-							cfg_ptr						            Specifies pointer to the smp_poe_alarm_cfg
-																	structure where the retrieved configuration
-																	will be stored.
+							cfg_ptr			Specifies pointer to the vision_mng_poe_alarm_cfg
+                                            structure where the retrieved configuration
+											will be stored.
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_poe_alarm_cfg_get(enum smp_port port, struct smp_poe_alarm_cfg *cfg_ptr);
+extern int vision_mng_ethport_poe_alarm_cfg_get(enum vision_mng_port port, struct vision_mng_poe_alarm_cfg *cfg_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_poe_info(enum smp_port port, struct smp_poe_info *info)
+Syntax:				int vision_mng_ethport_poe_info(enum vision_mng_port port, 
+                                                    struct vision_mng_poe_info *info)
 
 Remarks:			This function retrieves Power over Ethernet advanced information
 					for the specified Ethernet port.
 										
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port         					        Specifies a single Ethernet port.
+							Parameter		 			Description
+							-------------------------------------------------------------------
+							port         			Specifies a single Ethernet port.
 																	
-							info_ptr					            Specifies pointer to the smp_poe_info
-																	structure where the retrieved information
-																	will be stored.
+							info_ptr				Specifies pointer to the vision_mng_poe_info
+													structure where the retrieved information
+													will be stored.
 																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_poe_info(enum smp_port port, struct smp_poe_info *info_ptr);
+extern int vision_mng_ethport_poe_info(enum vision_mng_port port, struct vision_mng_poe_info *info_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_port_poe_alarm(enum smp_port port, struct smp_poe_alarm *alarm_ptr)
+Syntax:				int vision_mng_ethport_poe_alarm(enum vision_mng_port port, 
+                                                     struct vision_mng_poe_alarm *alarm_ptr)
 
 Remarks:			This function retrieves Power over Ethernet alarms
 					for the specified Ethernet port.
 										
-							Parameter		 							Description
-							--------------------------------------------------------------------------------
-							port         					        Specifies a single Ethernet port.
+							Parameter		 		 Description
+							------------------------------------------------------------------
+							port         	Specifies a single Ethernet port.
+															
+							alarm_ptr		Specifies pointer to the vision_mng_poe_alarm
+											structure where the retrieved information
+											will be stored.
 																	
-							alarm_ptr					            Specifies pointer to the smp_poe_alarm
-																	structure where the retrieved information
-																	will be stored.
-																	
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-							Value		 									Description
-							--------------------------------------------------------------------------------
-							= SMP_STATUS_OK									No Errors		(Success)
-							< 0												Error Code 		(Failure)
-																			  SMP_STATUS_INV_ARG
-																			  SMP_STATUS_RESET
-																			  SMP_STATUS_TIMEOUT
-																			  SMP_STATUS_NO_CRD_RESPONSE
-																			  SMP_STATUS_NO_DEV_RESPONSE
+							Value		 				Description
+							-------------------------------------------------------------------
+							= VISION_MNG_STATUS_OK		No Errors		(Success)
+							< 0							Error Code 		(Failure)
+														  VISION_MNG_STATUS_INV_ARG
+														  VISION_MNG_STATUS_RESET
+														  VISION_MNG_STATUS_TIMEOUT
+														  VISION_MNG_STATUS_NO_CRD_RESPONSE
+														  VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_port_poe_alarm(enum smp_port port, struct smp_poe_alarm *alarm_ptr);
+extern int vision_mng_ethport_poe_alarm(enum vision_mng_port port, struct vision_mng_poe_alarm *alarm_ptr);
 
 /*********************************************************************************************
-Syntax:				int smp_firmware_upgrade(int fd_device, int fd_firmware)
+Syntax:				int vision_mng_firmware_upgrade(int fd_device, int fd_firmware)
 
 Remarks:			This function performs the firmware upgrade capabilities.
 					
@@ -1404,439 +1294,55 @@ Remarks:			This function performs the firmware upgrade capabilities.
 												 for example result of call to
 												 open("/system/shelf/interface.bin")
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
 							Value		 									Description
 							-------------------------------------------------------------------
-							= SMP_STATUS_OK		 No Errors		(Success)
+							= VISION_MNG_STATUS_OK		 No Errors		(Success)
 							< 0					 Error Code 		(Failure)
-													 SMP_STATUS_INV_ARG
-													 SMP_STATUS_RESET
-													 SMP_STATUS_TIMEOUT
-													 SMP_STATUS_NO_CRD_RESPONSE
-													 SMP_STATUS_NO_DEV_RESPONSE
+													 VISION_MNG_STATUS_INV_ARG
+													 VISION_MNG_STATUS_RESET
+													 VISION_MNG_STATUS_TIMEOUT
+													 VISION_MNG_STATUS_NO_CRD_RESPONSE
+													 VISION_MNG_STATUS_NO_DEV_RESPONSE
 *********************************************************************************************/
-extern int smp_firmware_upgrade(int fd_device, int fd_firmware);
+extern int vision_mng_firmware_upgrade(int fd_device, int fd_firmware);
 
 /*********************************************************************************************
-Syntax:				void smp_sync_timeout_set(unsigned int timeout)
+Syntax:				void vision_mng_sync_timeout_set(unsigned int timeout)
 
 Remarks:			This function modifies synchronization timeout
 
-						Parameter		 							Description
-						--------------------------------------------------------------------------------
-						timeout 									Specifies the timeout value in 
-																	milliseconds.
+						Parameter		  		Description
+						--------------------------------------------------------------------
+						timeout 		  Specifies the timeout value in  milliseconds.
 
 Return Value:	    None.
 
 *********************************************************************************************/
-extern void smp_sync_timeout_set(unsigned int timeout);
+extern void vision_mng_sync_timeout_set(unsigned int timeout);
 
 /*********************************************************************************************
-Syntax:				int smp_sync_timeout_get(unsigned int *timeout_ptr)
+Syntax:				int vision_mng_sync_timeout_get(unsigned int *timeout_ptr)
 
 Remarks:			This function retrieves synchronization timeout
 
-						Parameter		 							Description
-						--------------------------------------------------------------------------------
-						timeout_ptr									Specifies the pointer to the buffer where
-																	the timeout value in milliseconds will be
-																	stored.
+						Parameter				Description
+						---------------------------------------------------------------------
+						timeout_ptr		Specifies the pointer to the buffer where
+								   		the timeout value in milliseconds will be
+								   		stored.
 
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
+Return Value:	Returns VISION_MNG_STATUS_OK on success, or an error code on failure.
 
-						Value		 									Description
-						--------------------------------------------------------------------------------
-						= SMP_STATUS_OK									No Errors		(Success)
-						< 0												Error Code 		(Failure)
-																			SMP_STATUS_INV_ARG
-
-*********************************************************************************************/
-extern int smp_sync_timeout_get(unsigned int *timeout_ptr);
-
-/**************************************************************************************************
-Syntax:				void smp_card_timeout_set(unsigned int timeout)
-
-Remarks:			This function modifies card reply timeout
-
-						Parameter		 							Description
-						---------------------------------------------------------------------------
-						timeout 									Specifies the timeout value in
-																	milliseconds.
-
-Return Value:	    None.
-***************************************************************************************************/
-extern void smp_card_timeout_set(unsigned int timeout);
-
-/*********************************************************************************************
-Syntax:				int smp_sem_timeout_get(unsigned int *timeout_ptr)
-
-Remarks:			This function retrieves card reply timeout
-
-						Parameter		 							Description
-						--------------------------------------------------------------------------------
-						timeout_ptr									Specifies the pointer to the buffer where
-																	the timeout value in milliseconds will be
-																	stored.
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 									Description
-						--------------------------------------------------------------------------------
-						= SMP_STATUS_OK									No Errors		(Success)
-						< 0												Error Code 		(Failure)
-																			SMP_STATUS_INV_ARG
+						Value	   				Description
+						---------------------------------------------------------------------
+						= VISION_MNG_STATUS_OK		No Errors		(Success)
+						< 0				  		    Error Code 		(Failure)
+										  			VISION_MNG_STATUS_INV_ARG
 
 *********************************************************************************************/
-extern int smp_card_timeout_get(unsigned int *timeout_ptr);
+extern int vision_mng_sync_timeout_get(unsigned int *timeout_ptr);
 
-/**************************************************************************************************
-Syntax:				void smp_card_timeout_set(unsigned int timeout)
 
-Remarks:			This function modifies I2C attached devices timeout
-
-						Parameter		 							Description
-						---------------------------------------------------------------------------
-						timeout 									Specifies the timeout value in
-																	milliseconds.
-
-Return Value:	    None.
-***************************************************************************************************/
-extern void smp_i2c_timeout_set(unsigned int timeout);
-
-/*********************************************************************************************
-Syntax:				int smp_sem_timeout_get(unsigned int *timeout_ptr)
-
-Remarks:			This function retrieves I2C attached devices timeout
-
-						Parameter		 							Description
-						--------------------------------------------------------------------------------
-						timeout_ptr									Specifies the pointer to the buffer where
-																	the timeout value in milliseconds will be
-																	stored.
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 									Description
-						--------------------------------------------------------------------------------
-						= SMP_STATUS_OK									No Errors		(Success)
-						< 0												Error Code 		(Failure)
-																			SMP_STATUS_INV_ARG
-																			SMP_STATUS_RESET
-																			SMP_STATUS_TIMEOUT
-																			SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_i2c_timeout_get(unsigned int *timeout_ptr);
-
-/*********************************************************************************************
-Syntax:			int smp_i2c_write(enum smp_peripherals peripheral, int address, char value)
-
-Remarks:		This function writes specified register in the devices attached to
-				the interface module or to the expansion board via I2C
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral        	Specifies the target device.
-						
-						address             I2C register address
-						
-						value               Value to write
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_i2c_write(enum smp_peripherals peripheral, int address, char value);
-
-/*********************************************************************************************
-Syntax:			int smp_i2c_read(enum smp_peripherals peripheral, int address, char *value_ptr)
-
-Remarks:		This function reads specified register in the devices attached to
-				the interface module or to the expansion board via I2C
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral        	Specifies the target device.
-						
-						address             I2C register address
-						
-						value_ptr           Pointer to buffer where the read value
-											will be stored.
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_i2c_read(enum smp_peripherals peripheral, int address, char *value_ptr);
-
-
-/*********************************************************************************************
-Syntax:			int smp_spi_write(enum smp_peripherals peripheral, char *buffer, int num)
-
-Remarks:		This function writes specified register in the devices attached to
-				to the expansion board via SPI
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral		    Specifies the target device.
-						
-						buffer_ptr          Pointer to buffer, contains the data to write
-						
-						num                 Number of bytes to write
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_spi_write(enum smp_peripherals peripheral, char *buffer_ptr, int num);
-
-/*********************************************************************************************
-Syntax:			int smp_spi_read(enum smp_peripherals peripheral, char *buffer, int num)
-
-Remarks:		This function reads specified register in the devices attached to
-				to the expansion board via SPI
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral		    Specifies the target device.
-						
-						buffer_ptr          Pointer to buffer where the read data will be stored
-						
-						num                 Number of bytes to read
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_spi_read(enum smp_peripherals peripheral, char *buffer_ptr, int num);
-
-/*********************************************************************************************
-Syntax:			int smp_mdio_write(enum smp_peripherals peripheral, int dev, int addr, int val)
-
-Remarks:		This function writes specified register in the devices via MDIO
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral		    Specifies the target MDIO line.
-						
-						dev                 MDIO device
-						
-						addr                Target address
-						
-						val                 Value to write
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_mdio_write(enum smp_peripherals peripheral, int dev, int addr, int val);
-
-/*********************************************************************************************
-Syntax:			int smp_mdio_read(enum smp_peripherals peripheral, int dev, int addr, int *val_prt)
-
-Remarks:		This function reads specified register in the devices via MDIO
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral		    Specifies the target MDIO line.
-						
-						dev                 MDIO device
-						
-						addr                Target address
-						
-						val_ptr             Pointer to buffer where the read value will be stored
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_mdio_read(enum smp_peripherals peripheral, int dev, int addr, int *val_prt);
-
-/*********************************************************************************************
-Syntax:			int smp_gpio_setup(enum smp_peripherals peripheral, int lines, 
-								   enum smp_gpio_mode mode)
-
-Remarks:		This function configures GPIO line or group of lines. 
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral 	    Specifies the expansion board GPIO.
-						
-						lines               Bit mask. Specifies the group of GPIO lines:
-						
-													SMP_GPIO_1
-													SMP_GPIO_2
-													SMP_GPIO_3
-													SMP_GPIO_4
-											
-											The group can be defined as following:
-												SMP_GPIO_1 | SMP_GPIO_3
-						
-						mode                Specifies the mode ( In/Out/Disabled )
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_gpio_setup(enum smp_peripherals peripheral, int lines, enum smp_gpio_mode mode);
-
-/*********************************************************************************************
-Syntax:			int smp_gpio_write(enum smp_peripherals peripheral, int lines, int val_mask)
-
-Remarks:		This function writes to GPIO line or to the group of lines. 
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral 	    Specifies the expansion board GPIO.
-						
-						lines               Bit mask. Specifies the group of GPIO lines:
-						
-													SMP_GPIO_1
-													SMP_GPIO_2
-													SMP_GPIO_3
-													SMP_GPIO_4
-											
-											The group can be defined as following:
-												SMP_GPIO_1 | SMP_GPIO_3
-						
-						val_mask            Specifies the bit mask to be written. The appropriate
-						                    bit values should be placed in the offsets corresponding
-											to the specified gpio lines.
-						
-				The example below shows how to write "0" to the GPIO_1 and "1" to GPIO_2
-				of the expansion card#1 interface:
-				
-				if( smp_gpio_write(SMP_EXP1_FLX, SMP_GPIO_1|SMP_GPIO_2, 0x02) == SMP_STATUS_OK){
-						
-						do something;
-				}
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_gpio_write(enum smp_peripherals peripheral, int lines, int val_mask);
-
-/*********************************************************************************************
-Syntax:			int smp_gpio_read(enum smp_peripherals peripheral, int lines, int *val_mask_ptr)
-
-Remarks:		This function reads from GPIO line or from the group of lines. Only GPIO lines
-                setup as SMP_GPIO_INPUT can be read. Reading of GPIO in the not read modes 
-				returns undefined value
-
-						Parameter					Description
-						-----------------------------------------------------------------------
-						peripheral 	    Specifies the expansion board GPIO.
-						
-						lines               Bit mask. Specifies the group of GPIO lines:
-						
-													SMP_GPIO_1
-													SMP_GPIO_2
-													SMP_GPIO_3
-													SMP_GPIO_4
-											
-											The group can be defined as following:
-												SMP_GPIO_1 | SMP_GPIO_3
-						
-						val_mask_ptr        Specifies the pointer to the buffer where readout value
-						                    will be stored. The appropriate bit values can found
-						                    at the offsets corresponding to the specified gpio lines.
-						
-				The example below shows how to read from two GPIO lines
-				from the expansion card#1 interface:
-				
-				int value;
-				
-				if( smp_gpio_read(SMP_EXP1_FLX, SMP_GPIO_1|SMP_GPIO_2, &value) == SMP_STATUS_OK){
-						
-					int gpio1 = value & SMP_GPIO_1;
-					int gpio2 = value & SMP_GPIO_2;
-				}
-
-Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
-
-						Value		 		 		Description
-						------------------------------------------------------------------------
-						= SMP_STATUS_OK		 	No Errors		(Success)
-						< 0					 	Error Code 		(Failure)
-													SMP_STATUS_INV_ARG
-													SMP_STATUS_RESET
-													SMP_STATUS_TIMEOUT
-													SMP_STATUS_NO_CRD_RESPONSE
-
-*********************************************************************************************/
-extern int smp_gpio_read(enum smp_peripherals peripheral, int lines, int *val_mask_ptr);
-/* ##### */
-
-/*******************************************************************************************
-	EXPORT SECTION: END
-*******************************************************************************************/
-
-
-#endif /* _SMP_H */
+#endif /* _VISION_MNG_H */
