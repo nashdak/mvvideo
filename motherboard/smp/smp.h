@@ -444,7 +444,7 @@ struct smp_sfp_vendor_info {
 	char vendor_pn[16];	  /* Part number provided by SFP transceiver vendor (ASCII) */
 	char vendor_rev[4];	  /* Revision level for part number provided by vendor (ASCII) */
 	char vendor_sn[16];	  /* Serial number provided by vendor (ASCII) */
-	char data_code[8];	  /* Vendor’s manufacturing date code */
+	char data_code[8];	  /* Vendor's manufacturing date code */
 
 };
 
@@ -1398,11 +1398,11 @@ Remarks:			This function performs the firmware upgrade capabilities.
 							------------------------------------------------------------------
 							fd_device         	 Specifies serial port file descriptor.
 												 For example result of call to
-												 open(“/dev/ttyUSB0”).
+												 open("/dev/ttyUSB0").
 																	
 							fd_firmware	  		 file descriptor of a file containing the firmware,
 												 for example result of call to
-												 open(“/system/shelf/interface.bin”)
+												 open("/system/shelf/interface.bin")
 
 Return Value:	Returns SMP_STATUS_OK on success, or an error code on failure.
 
@@ -1761,7 +1761,7 @@ Remarks:		This function writes to GPIO line or to the group of lines.
 						                    bit values should be placed in the offsets corresponding
 											to the specified gpio lines.
 						
-				The example below shows how to write ‘0’ to the GPIO_1 and ‘1’ to GPIO_2
+				The example below shows how to write "0" to the GPIO_1 and "1" to GPIO_2
 				of the expansion card#1 interface:
 				
 				if( smp_gpio_write(SMP_EXP1_FLX, SMP_GPIO_1|SMP_GPIO_2, 0x02) == SMP_STATUS_OK){
